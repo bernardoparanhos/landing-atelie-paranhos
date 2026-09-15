@@ -204,6 +204,7 @@ sharp('public/favicon-16.png').resize(320,320,{kernel:'nearest'}).toFile('zoom16
 |---|---|
 | Nada interage e o console acusa CSP | Script virou inline — confira `assetsInlineLimit: 0` |
 | As demos aparecem sem estilo/interação | `allow-same-origin` sumiu do `sandbox` do iframe |
+| Só a aba *O site* quebra, e só em produção | `cleanUrls` ligado no `vercel.json` — ver [DEPLOY.md](DEPLOY.md) |
 | Fonte errada, tudo em Georgia | Caminho quebrado em `public/fonts/fontes.css` |
 | Barra de rolagem horizontal | Alguma `minmax()` nova sem `min()`, ou largura fixa |
 | Prévia sem imagem no WhatsApp | `SITE` vazio em `src/config.ts` no momento do build |

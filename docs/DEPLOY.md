@@ -40,6 +40,20 @@
    comando de build, pasta de saída e todos os cabeçalhos de segurança.
 4. **Deploy.**
 
+> **Não ative `cleanUrls` nem `trailingSlash` no [`vercel.json`](../vercel.json).**
+> Parece inofensivo e quebra a demo do site. `cleanUrls` redireciona
+> `/demos/site/index.html` para `/demos/site`; a URL perde um nível e os
+> caminhos relativos daquela página (`style.css`, `main.js`) passam a resolver a
+> partir de `/demos/`, dando 404. A página aparece sem estilo e sem interação.
+>
+> O que torna o defeito difícil de ler: **as imagens continuam carregando**,
+> porque existe uma pasta `/demos/assets/` com os mesmos arquivos. E as outras
+> duas demos não quebram, porque `proposta.html` e `painel.html` já estão direto
+> em `/demos/` e não mudam de pasta-base. O sintoma é "só a aba *O site* está
+> estranha", que não parece problema de configuração de hospedagem.
+>
+> Isso só aparece em produção: `npm run preview` não aplica o `vercel.json`.
+
 Domínio próprio: **Settings → Domains → Add**. A Vercel mostra os registros de
 DNS para apontar no seu registrador. O HTTPS sai automático e de graça.
 
