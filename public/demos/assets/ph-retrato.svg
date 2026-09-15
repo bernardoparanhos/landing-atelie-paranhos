@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+<defs><pattern id="p" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+<rect width="14" height="14" fill="#ded9d2"></rect><rect width="5" height="14" fill="#c7c0b6"></rect></pattern></defs>
+<rect width="1000" height="1000" fill="url(#p)"></rect>
+<rect x="350" y="466" width="300" height="68" fill="#ded9d2"></rect>
+<text x="500" y="502" fill="#7d766c" font-family="ui-monospace,Menlo,monospace" font-size="20" letter-spacing="2" text-anchor="middle">RETRATO DO FOTÓGRAFO</text>
+<text x="500" y="526" fill="#7d766c" font-family="ui-monospace,Menlo,monospace" font-size="13" letter-spacing="1" text-anchor="middle" opacity="0.8">1000×1000</text></svg>

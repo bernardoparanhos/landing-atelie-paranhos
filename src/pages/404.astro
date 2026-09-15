@@ -1,0 +1,68 @@
+---
+import { MARCA, waLink } from "../config";
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Página não encontrada · {MARCA}</title>
+<meta name="robots" content="noindex, follow" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#e9e6e1" />
+<!-- O SVG atende todo navegador moderno (e troca de cor em aba escura).
+     Os PNG são para navegador antigo e para o iOS; cada tamanho tem a
+     espessura de traço própria — ver docs/MANUTENCAO.md. -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/fonts/fontes.css" />
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;min-height:100svh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;padding:clamp(32px,8vw,80px) clamp(24px,7vw,110px);
+    background:#e9e6e1;color:#14110f;font-family:'Jost',system-ui,sans-serif;
+    text-align:center;overflow-x:clip;
+  }
+  a{color:inherit;text-decoration:none}
+  .rotulo{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0}
+  .numero{
+    font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;
+    font-size:clamp(76px,18vw,160px);line-height:1;margin:14px 0 0;color:#8a6f4a;
+  }
+  h1{
+    font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-style:italic;
+    font-size:clamp(28px,5vw,44px);line-height:1.2;margin:10px 0 0;max-width:20ch;
+    text-wrap:balance;
+  }
+  .texto{font-size:16px;line-height:1.8;color:#3b3630;max-width:46ch;margin:18px 0 0;text-wrap:pretty}
+  .acoes{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin-top:36px}
+  .acoes a{
+    display:inline-block;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
+    border-bottom:1px solid #8a6f4a;padding-bottom:7px;min-height:44px;
+  }
+  .acoes a:hover{color:#8a6f4a}
+  :where(a):focus-visible{outline:2px solid #8a6f4a;outline-offset:3px;border-radius:2px}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  }
+</style>
+</head>
+<body>
+  <p class="rotulo">{MARCA}</p>
+  <p class="numero">404</p>
+  <h1>Esta página não existe (ou mudou de endereço).</h1>
+  <p class="texto">
+    Pode ser um link antigo ou um erro de digitação. A página principal continua
+    no lugar de sempre.
+  </p>
+  <div class="acoes">
+    <a href="/">Voltar para o início</a>
+    <a href={waLink} rel="noopener noreferrer" target="_blank">Falar no WhatsApp</a>
+  </div>
+</body>
+</html>

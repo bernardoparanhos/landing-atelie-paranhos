@@ -1,0 +1,747 @@
+---
+import { Image } from "astro:assets";
+import heroGestante from "../assets/hero-gestante.jpg";
+import heroNewborn from "../assets/hero-newborn.jpg";
+
+// Tudo o que se edita para publicar mora em src/config.ts.
+import { MARCA, TITULO, DESCRICAO, base, canonical, waLink } from "../config";
+
+const rotas = ["gestante", "recem-nascido", "familia", "smash", "sobre", "proposta"];
+
+// Content-Security-Policy como <meta>: vale mesmo quando a hospedagem não
+// aplica cabeçalhos (ex.: GitHub Pages, abrir o dist/ direto). Os cabeçalhos em
+// public/_headers e vercel.json são a camada principal e trazem também
+// frame-ancestors, que <meta> não consegue expressar. Ver docs/SEGURANCA.md.
+// Fora de produção fica desligada para não brigar com o dev toolbar do Astro.
+const csp = [
+  "default-src 'self'",
+  "base-uri 'none'",
+  "object-src 'none'",
+  "form-action 'none'",
+  "script-src 'self'",
+  // 'unsafe-inline' em estilo é inevitável: a página inteira usa style="" nos
+  // elementos. Não abre caminho para execução de script.
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "frame-src 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{TITULO}</title>
+<meta name="description" content={DESCRICAO} />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#e9e6e1" />
+<meta name="author" content={MARCA} />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+{import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+{canonical && <link rel="canonical" href={canonical} />}
+
+<!-- O SVG atende todo navegador moderno (e troca de cor em aba escura).
+     Os PNG são para navegador antigo e para o iOS; cada tamanho tem a
+     espessura de traço própria — ver docs/MANUTENCAO.md. -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:site_name" content={MARCA} />
+<meta property="og:title" content={TITULO} />
+<meta property="og:description" content={DESCRICAO} />
+{canonical && <meta property="og:url" content={canonical} />}
+{base && <meta property="og:image" content={`${base}${heroGestante.src}`} />}
+{base && <meta property="og:image:alt" content="Exemplo de proposta de ensaio publicada como página própria" />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={TITULO} />
+<meta name="twitter:description" content={DESCRICAO} />
+{base && <meta name="twitter:image" content={`${base}${heroGestante.src}`} />}
+
+<link rel="preload" href="/fonts/jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/fonts/cormorant-garamond-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/fonts/fontes.css" />
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#e9e6e1;color:#14110f;font-family:'Jost',system-ui,sans-serif}
+  a{color:inherit;text-decoration:none}
+  a:hover{color:#8a6f4a}
+  img{display:block}
+  @keyframes pulso{0%,100%{opacity:1}50%{opacity:.45}}
+  .ig{transition:background .3s}
+  .ig:hover{background:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7)}
+  .btn-wa{transition:background .3s}
+  .btn-wa:hover{background:#8a6f4a;color:#fff}
+  .tabbtn{transition:background .3s,color .3s}
+  .janela-frame{scrollbar-width:none;-ms-overflow-style:none}
+  .janela-frame::-webkit-scrollbar{width:0;height:0;display:none}
+
+  /* Feed do Instagram (seção 04): a tarja "ver no instagram" ao passar o mouse.
+     Precisa de :global() porque estes quadros são criados por JavaScript — o
+     Astro escopa o <style> por atributo e só marca o que está no template, então
+     uma regra normal não alcançaria elementos criados em tempo de execução. */
+  :global(.ig-tile){transition:box-shadow .5s}
+  :global(.ig-tile .ig-ov){opacity:0;transition:opacity .3s}
+  :global(.ig-tile:hover .ig-ov){opacity:1}
+
+  /* ===================== ACESSIBILIDADE =====================
+     Foco visível em qualquer fundo: sem isso, quem navega por teclado se
+     perde nas seções escuras (04) e nos botões sobre fundo claro. */
+  :where(a, button, input, [tabindex]):focus-visible{
+    outline:2px solid #8a6f4a;
+    outline-offset:3px;
+    border-radius:2px;
+  }
+  /* Nas faixas escuras o ouro tem pouco contraste: usa o papel */
+  section[style*="background:#14110f"] :where(a, button):focus-visible{
+    outline-color:#e9e6e1;
+  }
+
+  /* Respeita quem pediu menos movimento no sistema (WCAG 2.3.3).
+     A seta "↓ mude o valor aqui embaixo" pisca em laço infinito. */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+
+  /* ===================== RESPONSIVO =====================
+     A página é construída com estilos inline (veio do Claude Design),
+     por isso os ajustes de tela aqui precisam de !important para vencer
+     o inline. Cada bloco está comentado com o que ele conserta. */
+
+  /* trava geral: nada escapa pelas laterais em nenhuma largura */
+  html{-webkit-text-size-adjust:100%}
+  body{overflow-x:clip}
+  img,svg,video,iframe{max-width:100%}
+  input,button,textarea,select{max-width:100%;font-family:inherit}
+  h1,h2,h3,p,li,span,a{overflow-wrap:break-word}
+
+  /* o texto longo do hero e dos títulos nunca fura a coluna */
+  .aba-nova-curto{display:none}
+
+  /* --- até 900px: hero e demo interativa empilham (2 colunas ficariam
+         estreitas demais para a colagem e para o formulário do painel) --- */
+  @media (max-width:900px){
+    .hero-grid,.demo-grid{grid-template-columns:1fr !important}
+  }
+
+  /* --- até 860px: a colagem do hero deixa de ser absoluta e passa a
+         empilhar, senão o cartão de baixo era cortado pelo overflow --- */
+  @media (max-width:860px){
+    .hero-colagem{min-height:0 !important}
+    .hero-card-a{position:static !important;width:100% !important;max-width:360px;margin:0 auto}
+    .hero-card-b{position:static !important;width:70% !important;max-width:230px;margin:-16px 6px 0 auto}
+    .hero-nota{position:static !important;display:block;transform:none !important;text-align:right;margin:18px 6px 0 0}
+  }
+
+  /* --- até 700px: tira os traços de ligação entre as rotas, que sobravam
+         soltos no início da linha quando a lista quebrava --- */
+  @media (max-width:700px){
+    .rota-traco{display:none !important}
+  }
+
+  /* --- até 600px: celular --- */
+  @media (max-width:600px){
+    /* topo: marca em cima, risco, e a etiqueta embaixo (antes quebrava em duas linhas) */
+    .topo{flex-wrap:wrap;gap:12px !important}
+    .topo-risco{flex:1 0 100% !important;order:2}
+    .topo-tag{order:3}
+
+    /* linha de preços Premium / Clássico / Mini */
+    .precos-mini{flex-wrap:wrap;gap:12px 20px !important}
+
+    /* cabeçalho do painel de demonstração */
+    .painel-head{flex-wrap:wrap;gap:4px !important;justify-content:flex-start !important}
+
+    /* a barra de endereço não cabe com o sufixo */
+    .url-sufixo{display:none !important}
+
+    /* abas da vitrine ocupam a largura toda, uma por linha */
+    .abas > button{flex:1 0 100% !important}
+
+    /* iOS dá zoom em input com fonte < 16px */
+    #dm-nome,#dm-valor{font-size:16px !important}
+
+    /* rótulo do link da janela encurta */
+    .aba-nova-longo{display:none}
+    .aba-nova-curto{display:inline}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header style="background:#e9e6e1;padding:clamp(28px,4vw,44px) clamp(24px,7vw,110px) clamp(64px,9vw,120px);position:relative;overflow:hidden">
+  <div class="topo" style="display:flex;align-items:center;gap:22px;margin-bottom:clamp(44px,7vw,80px)">
+    <span style="font-family:'Cormorant Garamond',serif;font-size:clamp(17px,2vw,22px);letter-spacing:.22em;white-space:nowrap">{MARCA}</span>
+    <span class="topo-risco" style="flex:1;height:1px;background:#c9c3ba"></span>
+    <span class="topo-tag" style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;white-space:nowrap">sites para fotógrafos</span>
+  </div>
+  <div class="hero-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(36px,6vw,80px);align-items:center">
+    <div>
+      <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 20px">para quem manda proposta por PDF</p>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(36px,4.6vw,64px);line-height:1.14;margin:0;max-width:17ch;text-wrap:balance">O seu trabalho merece mais que um <em style="font-style:italic;color:#8a6f4a">PDF</em> com propaganda de outra empresa.</h1>
+      <p style="font-size:clamp(15.5px,1.5vw,18px);line-height:1.85;color:#3b3630;max-width:48ch;margin:26px 0 0;text-wrap:pretty">A sua proposta pode ser uma página limpa, com link próprio, com a sua cara. E você edita sozinha, quando quiser.</p>
+      <div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;margin-top:36px">
+        <a href={waLink} style="display:inline-block;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:#14110f;border-bottom:1px solid #8a6f4a;padding-bottom:7px">Quero ver como fica a minha</a>
+        <span style="font-size:12px;color:#6d675f;letter-spacing:.06em">leva 2 minutos, é só rolar</span>
+      </div>
+    </div>
+    <div class="hero-colagem" style="position:relative;min-height:clamp(340px,40vw,480px)">
+      <div class="hero-card-a" style="position:absolute;top:0;left:2%;width:58%;background:#fff;box-shadow:0 30px 70px rgba(20,17,15,.28)">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;border-bottom:1px solid rgba(0,0,0,.08)">
+          <span style="display:flex;gap:4px"><i style="width:6px;height:6px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:6px;height:6px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:6px;height:6px;border-radius:50%;background:#c9c3ba;display:block"></i></span>
+          <span style="font-size:9px;letter-spacing:.04em;color:#3b3630">seuestudio.com.br/<b style="font-weight:500;color:#8a6f4a">ensaios</b></span>
+        </div>
+        <Image src={heroGestante} alt="" width={760} widths={[380, 760]} sizes="(max-width:860px) 360px, 30vw" loading="eager" fetchpriority="high" style="width:100%;height:clamp(200px,24vw,290px);object-fit:cover" />
+        <div style="padding:16px 18px 18px">
+          <p style="font-size:8.5px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 5px">ensaio externo</p>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(19px,2vw,24px);letter-spacing:.06em;margin:0 0 11px;color:#14110f">Luz de fim de tarde</p>
+          <ul style="list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:6px">
+            <li style="font-size:10.5px;color:#3b3630;display:flex;gap:8px;align-items:flex-start;line-height:1.4"><span style="width:4px;height:4px;border-radius:50%;background:#8a6f4a;margin-top:6px;flex:none"></span>Até 1h e 30 de sessão</li>
+            <li style="font-size:10.5px;color:#3b3630;display:flex;gap:8px;align-items:flex-start;line-height:1.4"><span style="width:4px;height:4px;border-radius:50%;background:#8a6f4a;margin-top:6px;flex:none"></span>40 fotos digitais em alta</li>
+            <li style="font-size:10.5px;color:#3b3630;display:flex;gap:8px;align-items:flex-start;line-height:1.4"><span style="width:4px;height:4px;border-radius:50%;background:#8a6f4a;margin-top:6px;flex:none"></span>2 trocas de look</li>
+          </ul>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-top:1px solid #e3ded6;padding-top:11px">
+            <span style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6d675f">pacote premium</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:#14110f">R$ 980</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-card-b" style="position:absolute;bottom:0;right:0;width:42%;background:#fff;padding:8px 8px 12px;box-shadow:0 30px 70px rgba(20,17,15,.3);transform:rotate(2.5deg)">
+        <Image src={heroNewborn} alt="" width={520} widths={[260, 520]} sizes="(max-width:860px) 230px, 22vw" loading="eager" style="width:100%;height:clamp(150px,18vw,210px);object-fit:cover" />
+        <div style="padding:11px 6px 4px;text-align:center">
+          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,1.5vw,18px);color:#14110f;margin:0 0 6px">ensaio no campo</p>
+          <span style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6d675f;display:block;line-height:1.5">45 min · 20 fotos · 1 look</span>
+          <span style="font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#8a6f4a;display:block;margin-top:4px">a partir de R$ 820</span>
+        </div>
+      </div>
+      <span class="hero-nota" style="position:absolute;top:-2%;right:1%;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,1.7vw,22px);color:#8a6f4a;transform:rotate(-3deg)">a sua cara, do início ao fim</span>
+    </div>
+  </div>
+</header>
+
+<!-- 01 ANTES E DEPOIS -->
+<section style="padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px);max-width:1240px;margin:0 auto">
+  <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 18px">01 · antes e depois</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 14px;line-height:1.2">A mesma proposta. Dois jeitos de chegar.</h2>
+  <p style="font-size:16px;line-height:1.8;color:#3b3630;max-width:60ch;margin:0 0 46px;text-wrap:pretty">O conteúdo é o mesmo: seus pacotes, suas fotos, seus valores. O que muda é o que a sua cliente vê primeiro.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:clamp(20px,3vw,40px);align-items:stretch">
+    <div>
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#6d675f;margin:0 0 12px">hoje</p>
+      <div style="background:#f4f2ee;border:1px solid #c9c3ba;box-shadow:0 14px 40px rgba(20,17,15,.1);overflow:hidden">
+        <div style="background:#3a3a3a;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:11px;letter-spacing:.08em"><span style="background:#d64545;color:#fff;font-size:9px;letter-spacing:.1em;padding:3px 7px">PDF</span> proposta_pacotes_2026_final_v3.pdf · 18 MB</div>
+        <div style="background:linear-gradient(90deg,#7b4fd6,#e05fa0);color:#fff;text-align:center;font-size:11px;letter-spacing:.1em;padding:8px 12px">✦ Anúncio · Crie você também seu catálogo grátis na PlataformaX</div>
+        <div style="padding:26px 26px 8px;position:relative">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><span style="font-size:26px;letter-spacing:.3em;color:rgba(20,17,15,.08);transform:rotate(-18deg);white-space:nowrap">PLATAFORMAX · GRÁTIS</span></div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px;color:#3b3630">Primeiro ano</p>
+          <p style="font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;margin:0 0 18px">pacotes 2026</p>
+          <div style="display:flex;gap:8px;margin-bottom:18px">
+            <div style="flex:1;height:64px;background:#dcd6cc"></div>
+            <div style="flex:1;height:64px;background:#d2cabe"></div>
+            <div style="flex:1;height:64px;background:#e0dad0"></div>
+          </div>
+          <div style="height:8px;background:#e3ded6;margin-bottom:8px"></div>
+          <div style="height:8px;background:#e3ded6;width:76%;margin-bottom:8px"></div>
+          <div style="height:8px;background:#e3ded6;width:58%"></div>
+        </div>
+        <div style="background:#efece6;border-top:1px solid #ddd7cc;text-align:center;font-size:10px;letter-spacing:.12em;color:#9a927f;padding:9px 12px;margin-top:22px">feito com PlataformaX · remova este selo assinando o plano Pro</div>
+      </div>
+      <ul style="list-style:none;padding:0;margin:18px 0 0;font-size:14px;line-height:2;color:#6d675f">
+        <li>arquivo pesado no WhatsApp da cliente</li>
+        <li>propaganda de terceiro na frente dela</li>
+        <li>mudou um preço, refaz e reenvia tudo</li>
+      </ul>
+    </div>
+    <div>
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px">com página própria</p>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 14px 40px rgba(20,17,15,.1);overflow:hidden">
+        <div style="background:#e9e6e1;display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(0,0,0,.08)">
+          <span style="display:flex;gap:5px"><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i></span>
+          <span style="flex:1;background:#fff;border:1px solid rgba(0,0,0,.08);font-size:11px;letter-spacing:.06em;color:#3b3630;padding:5px 12px">seuestudio.com.br/<b style="font-weight:500;color:#8a6f4a">primeiro-ano</b></span>
+        </div>
+        <div style="padding:30px 26px 26px;background:#e9e6e1">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px;text-align:center">Primeiro ano</p>
+          <p style="font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 20px;text-align:center">pacotes 2026</p>
+          <div style="display:flex;gap:8px;margin-bottom:20px">
+            <img src="/assets/ph-p-01.svg" alt="" style="flex:1;min-width:0;height:76px;object-fit:cover" />
+            <img src="/assets/ph-p-02.svg" alt="" style="flex:1;min-width:0;height:76px;object-fit:cover" />
+            <img src="/assets/ph-p-03.svg" alt="" style="flex:1;min-width:0;height:76px;object-fit:cover" />
+          </div>
+          <div class="precos-mini" style="display:flex;gap:14px;justify-content:center;text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#3b3630">
+            <span>Premium<br /><b style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;letter-spacing:.04em">R$ 980</b></span>
+            <span>Clássico<br /><b style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;letter-spacing:.04em">R$ 820</b></span>
+            <span>Mini<br /><b style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;letter-spacing:.04em">R$ 680</b></span>
+          </div>
+          <div style="text-align:center;margin-top:20px"><span style="display:inline-block;background:#14110f;color:#fff;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:9px 18px">Reservar pelo WhatsApp</span></div>
+        </div>
+      </div>
+      <ul style="list-style:none;padding:0;margin:18px 0 0;font-size:14px;line-height:2;color:#3b3630">
+        <li>um link leve, próprio, por tipo de ensaio</li>
+        <li>só a sua marca, do início ao fim</li>
+        <li>mudou o preço, o link já está atualizado</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 02 DEMO INTERATIVA -->
+<section style="background:#fff;border-top:1px solid #c9c3ba;border-bottom:1px solid #c9c3ba">
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px)">
+    <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 18px">02 · experimente agora</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 14px;line-height:1.2">Parece simples? É simples mesmo.</h2>
+    <p style="font-size:16px;line-height:1.8;color:#3b3630;max-width:60ch;margin:0 0 12px;text-wrap:pretty">Todo mundo pensa a mesma coisa: "parece fácil, mas na hora eu vou ter dificuldade". Então em vez de explicar, deixamos você mexer. Este é o seu painel, de verdade. Mude o valor ou o nome do pacote abaixo e salve.</p>
+    <p style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#8a6f4a;margin:0 0 44px;animation:pulso 2.4s ease infinite">↓ mude o valor aqui embaixo e veja o site mudar ao lado</p>
+    <div class="demo-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(22px,3.5vw,48px);align-items:start">
+      <div style="background:#e9e6e1;border:1px solid rgba(0,0,0,.1);padding:clamp(22px,3vw,36px)">
+        <div class="painel-head" style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:26px">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.18em;text-transform:uppercase">Seu estúdio · <span style="color:#8a6f4a">admin</span></span>
+          <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#6d675f">painel privado</span>
+        </div>
+        <div style="background:#fff;border:1px solid rgba(0,0,0,.1);padding:22px">
+          <p style="margin:0 0 4px"><span style="font-size:11px;letter-spacing:.24em;color:#8a6f4a">03</span> <span style="font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.12em;text-transform:uppercase;font-weight:400;margin-left:8px">Pacotes</span></p>
+          <p style="font-size:12.5px;color:#6d675f;margin:0 0 20px;line-height:1.6">Edite e salve. O site atualiza na hora, sem depender de ninguém.</p>
+          <label style="display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6d675f;margin-bottom:6px" for="dm-nome">Nome do pacote</label>
+          <input id="dm-nome" value="Doce Espera Premium" style="width:100%;box-sizing:border-box;border:1px solid #c9c3ba;background:#fdfcfa;font-family:'Jost',sans-serif;font-size:15px;letter-spacing:.06em;padding:10px 12px;color:#14110f;outline-color:#8a6f4a;margin-bottom:16px" />
+          <label style="display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#6d675f;margin-bottom:6px" for="dm-valor">Valor (R$)</label>
+          <input id="dm-valor" value="980" inputmode="numeric" style="width:100%;box-sizing:border-box;border:1px solid #c9c3ba;background:#fdfcfa;font-family:'Jost',sans-serif;font-size:15px;letter-spacing:.06em;padding:10px 12px;color:#14110f;outline-color:#8a6f4a" />
+          <p style="font-size:11.5px;color:#6d675f;margin:8px 0 18px">Aperte Enter ou clique em salvar.</p>
+          <button id="dm-salvar" type="button" style="background:#14110f;color:#fff;border:0;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:12px 22px;cursor:pointer;min-height:44px">Salvar alterações</button>
+          <span id="dm-publicado" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a6f4a;margin-left:14px;display:none">publicado no seu site</span>
+        </div>
+        <p style="font-size:12.5px;color:#6d675f;margin:18px 0 0;line-height:1.6">No painel de verdade você também troca fotos, textos, ensaios da home. Tudo assim, simples.</p>
+      </div>
+      <div>
+        <div style="background:#e9e6e1;display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(0,0,0,.1);border-bottom:0">
+          <span style="display:flex;gap:5px"><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#c9c3ba;display:block"></i></span>
+          <span style="flex:1;background:#fff;border:1px solid rgba(0,0,0,.08);font-size:11px;letter-spacing:.06em;color:#3b3630;padding:5px 12px">seuestudio.com.br/gestante <span class="url-sufixo" style="color:#8a6f4a;letter-spacing:.14em;text-transform:uppercase;font-size:9px;margin-left:6px">· o seu site, publicado</span></span>
+        </div>
+        <div style="background:#14110f;color:#fff;padding:clamp(26px,4vw,44px) clamp(22px,3vw,38px);border:1px solid rgba(0,0,0,.1);border-top:0;position:relative;overflow:hidden">
+          <span id="site-salvando" style="position:absolute;top:14px;right:16px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#c9b48d;animation:pulso 1s ease infinite;display:none">salvando…</span>
+          <p style="font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#c9b48d;margin:0 0 10px">ensaio gestante</p>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(24px,2.6vw,34px);margin:0 0 24px;line-height:1.2">A doce espera, do seu jeito.</h3>
+          <div style="display:flex;gap:8px;margin-bottom:26px">
+            <img src="/assets/ph-p-04.svg" alt="" style="flex:1;min-width:0;height:92px;object-fit:cover;opacity:.92" />
+            <img src="/assets/ph-p-05.svg" alt="" style="flex:1;min-width:0;height:92px;object-fit:cover;opacity:.92" />
+          </div>
+          <div id="site-card" style="border:1px solid rgba(255,255,255,.22);background:transparent;padding:20px 22px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;transition:opacity .3s, border-color .5s, background .5s, transform .5s">
+            <div>
+              <p style="font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#c9b48d;margin:0 0 6px">pacote</p>
+              <p id="site-nome" style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,4.4vw,24px);overflow-wrap:anywhere;letter-spacing:.1em;text-transform:uppercase;font-weight:400;margin:0">Doce Espera Premium</p>
+            </div>
+            <p id="site-valor" style="font-family:'Cormorant Garamond',serif;font-size:clamp(23px,5.6vw,30px);font-weight:500;margin:0;color:#fff;transition:color .5s">R$ 980</p>
+          </div>
+          <p id="site-publicado" style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#c9b48d;margin:14px 0 0;text-align:center;display:none">pronto, já está no ar para as suas clientes</p>
+          <div style="text-align:center;margin-top:24px"><span style="display:inline-block;border-bottom:1px solid #8a6f4a;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding-bottom:6px">Reservar pelo WhatsApp</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 NÃO É SÓ A PROPOSTA -->
+<section style="padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px);max-width:1240px;margin:0 auto">
+  <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 18px">03 · não é só a proposta</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 14px;line-height:1.2">É o seu site inteiro. Com a proposta dentro.</h2>
+  <p style="font-size:16px;line-height:1.8;color:#3b3630;max-width:60ch;margin:0 0 44px;text-wrap:pretty">Home com as suas fotos, uma página por tipo de ensaio, sobre você, galeria e as propostas com link próprio. Tudo debaixo do mesmo endereço, tudo seu.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:clamp(44px,6vw,64px)">
+    <span style="background:#14110f;color:#fff;font-size:11px;letter-spacing:.1em;padding:10px 16px">seuestudio.com.br</span>
+    {rotas.map((r) => (
+      <span style="display:flex;align-items:center;gap:10px">
+        <span class="rota-traco" style="width:14px;height:1px;background:#c9c3ba;display:block"></span>
+        <span style="background:#fff;border:1px solid rgba(0,0,0,.1);font-size:11px;letter-spacing:.08em;color:#3b3630;padding:10px 14px">/<b style="font-weight:500;color:#8a6f4a">{r}</b></span>
+      </span>
+    ))}
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(20px,3vw,40px)">
+    <div style="border-top:1px solid #c9c3ba;padding-top:22px">
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px">uma página por ensaio</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0 0 18px;text-wrap:pretty">Gestante, recém-nascido, família, smash. Cada um com o seu link, para mandar direto na conversa certa.</p>
+      <div style="display:flex;gap:6px">
+        <img src="/assets/ph-p-01.svg" alt="" style="flex:1;min-width:0;aspect-ratio:3/4;object-fit:cover" />
+        <img src="/assets/ph-p-05.svg" alt="" style="flex:1;min-width:0;aspect-ratio:3/4;object-fit:cover" />
+        <img src="/assets/ph-p-08.svg" alt="" style="flex:1;min-width:0;aspect-ratio:3/4;object-fit:cover" />
+      </div>
+    </div>
+    <div style="border-top:1px solid #c9c3ba;padding-top:22px">
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px">você atualiza sozinha</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0 0 18px;text-wrap:pretty">Fotos, preços e textos no seu painel, como você acabou de fazer aí em cima. Sem esperar ninguém, sem mensalidade.</p>
+      <div style="background:#fff;border:1px solid rgba(0,0,0,.1);padding:14px 16px;max-width:280px">
+        <p style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#6d675f;margin:0 0 8px">seu painel</p>
+        <div style="height:9px;background:#e9e6e1;margin-bottom:7px;width:88%"></div>
+        <div style="height:9px;background:#e9e6e1;margin-bottom:12px;width:64%"></div>
+        <span style="display:inline-block;background:#14110f;color:#fff;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:7px 12px">salvar</span>
+        <span style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#8a6f4a;margin-left:10px">publicado</span>
+      </div>
+    </div>
+    <div style="border-top:1px solid #c9c3ba;padding-top:22px">
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px">seu site nunca fica velho</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0 0 18px;text-wrap:pretty">Conecte o Instagram uma vez e os seus últimos posts aparecem no site sozinhos. Você posta lá e ele acompanha, sem subir foto nenhuma.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;max-width:240px">
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-01.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-02.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-03.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-06.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-07.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+        <span class="ig" style="display:block;padding:2px"><img src="/assets/ph-p-08.svg" alt="" style="width:100%;aspect-ratio:1;object-fit:cover" /></span>
+      </div>
+    </div>
+    <div style="border-top:1px solid #c9c3ba;padding-top:22px">
+      <p style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px">100% seu, no seu nome</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0;text-wrap:pretty">O domínio fica registrado no seu nome, no seu CPF. Se um dia você quiser trocar de quem cuida do site, ele vai com você. Você nunca fica refém de quem fez.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 INSTAGRAM -->
+<section style="background:#fff;border-top:1px solid #c9c3ba;border-bottom:1px solid #c9c3ba">
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px)">
+    <div class="ig-secao" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(40px,5vw,80px);align-items:center">
+      <div>
+        <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 18px">04 · seu instagram, vivo no site</p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 22px;line-height:1.2">Você posta lá. O site acompanha sozinho.</h2>
+        <p style="font-size:16px;line-height:1.85;color:#3b3630;margin:0 0 32px;text-wrap:pretty">Os seus últimos posts aparecem no site e trocam sozinhos. Postou hoje, já está na sua página hoje. Nunca mais subir a mesma foto duas vezes, nunca mais um site parado no tempo.</p>
+        <ul style="list-style:none;padding:0;margin:0 0 30px;display:flex;flex-direction:column">
+          <li style="display:flex;gap:20px;align-items:baseline;padding:20px 0;border-top:1px solid #e3ded6">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:#8a6f4a;flex:none;width:28px;line-height:1">01</span>
+            <span style="font-size:14.5px;line-height:1.65;color:#3b3630"><b style="font-weight:500;color:#14110f;font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:.02em;display:block;margin-bottom:3px">Conexão oficial, pelo próprio Instagram</b>Você só clica em autorizar, uma vez. Nada de gambiarra.</span>
+          </li>
+          <li style="display:flex;gap:20px;align-items:baseline;padding:20px 0;border-top:1px solid #e3ded6">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:#8a6f4a;flex:none;width:28px;line-height:1">02</span>
+            <span style="font-size:14.5px;line-height:1.65;color:#3b3630"><b style="font-weight:500;color:#14110f;font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:.02em;display:block;margin-bottom:3px">Sem entregar a sua senha para ninguém</b>Nem eu vejo. A conexão puxa só os posts públicos, nada além disso.</span>
+          </li>
+          <li style="display:flex;gap:20px;align-items:baseline;padding:20px 0;border-top:1px solid #e3ded6;border-bottom:1px solid #e3ded6">
+            <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:#8a6f4a;flex:none;width:28px;line-height:1">03</span>
+            <span style="font-size:14.5px;line-height:1.65;color:#3b3630"><b style="font-weight:500;color:#14110f;font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:.02em;display:block;margin-bottom:3px">Atualiza sozinho, para sempre</b>Você posta, o site se atualiza. Sem mexer no site, sem me chamar.</span>
+          </li>
+        </ul>
+        <div style="display:inline-flex;align-items:center;gap:10px;background:#f4f2ee;border:1px solid #d8d2c8;padding:10px 16px">
+          <span style="width:9px;height:9px;border-radius:50%;background:#3fae6a;display:block;box-shadow:0 0 0 3px rgba(63,174,106,.2);flex:none"></span>
+          <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#3b3630">@seuestudio · conectado</span>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#8a6f4a;margin:0 0 12px;text-align:right">no seu site · agora</p>
+        <div style="border:1px solid rgba(0,0,0,.1);box-shadow:0 22px 55px rgba(20,17,15,.14);background:#fff">
+          <div style="display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.08)">
+            <span style="flex:1;min-width:0">
+              <span style="display:block;font-size:13px;letter-spacing:.04em;color:#14110f;font-weight:500">seuestudio</span>
+              <span style="display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#8a6f4a">seguir · ver perfil</span>
+            </span>
+            <span style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#6d675f;display:flex;align-items:center;gap:6px;flex:none"><span style="width:6px;height:6px;border-radius:50%;background:#3fae6a;display:block;animation:pulso 1.6s ease infinite;flex:none"></span>ao vivo</span>
+          </div>
+          <div id="ig-grid" aria-hidden="true" style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px"></div>
+        </div>
+        <p style="font-size:12px;line-height:1.6;color:#6d675f;margin:16px 0 0;text-align:center;text-wrap:pretty">Este bloco fica trocando sozinho. Foi assim que ele entrou no seu site: você postou, ele apareceu.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 VITRINE -->
+<section style="background:#14110f;color:#fff">
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px)">
+    <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#c9b48d;margin:0 0 18px">05 · veja ao vivo</p>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 14px;line-height:1.2">O template, pronto para virar o seu.</h2>
+    <p style="font-size:16px;line-height:1.8;color:rgba(255,255,255,.75);max-width:56ch;margin:0 0 44px;text-wrap:pretty">Este é o único link que sai desta página. Navegue à vontade: tudo o que você vê ali, o painel deixa você trocar. Fotos, ensaios, textos, valores.</p>
+    <div class="abas" role="tablist" aria-label="O que mostrar na janela" style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+      <button id="btn-site" class="tabbtn" type="button" role="tab" aria-controls="janela-frame" aria-selected="false" data-aba="site" style="flex:1;min-width:150px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:14px 20px;cursor:pointer;min-height:44px">O site</button>
+      <button id="btn-proposta" class="tabbtn" type="button" role="tab" aria-controls="janela-frame" aria-selected="false" data-aba="proposta" style="flex:1;min-width:150px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:14px 20px;cursor:pointer;min-height:44px">A proposta</button>
+      <button id="btn-painel" class="tabbtn" type="button" role="tab" aria-controls="janela-frame" aria-selected="false" data-aba="painel" style="flex:1;min-width:150px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;padding:14px 20px;cursor:pointer;min-height:44px">O painel</button>
+    </div>
+    <div style="background:#e9e6e1;border:1px solid rgba(255,255,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid rgba(0,0,0,.08)">
+        <span style="display:flex;gap:6px"><i style="width:9px;height:9px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:9px;height:9px;border-radius:50%;background:#c9c3ba;display:block"></i><i style="width:9px;height:9px;border-radius:50%;background:#c9c3ba;display:block"></i></span>
+        <span id="janela-url" style="flex:1;background:#fff;border:1px solid rgba(0,0,0,.08);font-size:11px;letter-spacing:.06em;color:#3b3630;padding:6px 14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">estudionome.com.br</span>
+        <a id="janela-nova-aba" href="https://paranhos-dev.github.io/template-fot-grafos/" target="_blank" rel="noopener noreferrer" style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8a6f4a;white-space:nowrap"><span class="aba-nova-longo">abrir em nova aba</span><span class="aba-nova-curto">abrir</span> ↗</a>
+      </div>
+      <!-- sandbox: allow-same-origin é obrigatório aqui. Sem ele o iframe ganha
+           origem opaca e o navegador bloqueia por CORS o JS e as fontes dos
+           demos (eles ficam sem JavaScript). Com os dois valores o sandbox
+           deixa de ser barreira contra o próprio conteúdo, mas continua
+           bloqueando o que interessa: navegar a janela de cima, abrir pop-ups,
+           enviar formulários, iniciar downloads e abrir diálogos modais. -->
+      <iframe id="janela-frame" class="janela-frame" src="/demos/site/index.html" title="Template ao vivo" loading="lazy" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer" style="display:block;width:100%;height:clamp(420px,62vh,640px);border:0;background:#e9e6e1"></iframe>
+    </div>
+    <p id="janela-legenda" style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin:18px 0 0;text-align:center">role dentro da janela · o site é este, de verdade</p>
+  </div>
+</section>
+
+<!-- 06 COMO FUNCIONA -->
+<section style="padding:clamp(70px,10vw,130px) clamp(24px,6vw,110px);max-width:1240px;margin:0 auto">
+  <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 18px">06 · como funciona</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(30px,3.6vw,50px);margin:0 0 46px;line-height:1.2">Sem risco. A saída é sempre livre.</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:clamp(20px,3vw,40px)">
+    <div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:#8a6f4a;margin:0 0 10px">1</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0;text-wrap:pretty">Você me manda algumas fotos favoritas e seus materiais. Só isso.</p>
+    </div>
+    <div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:#8a6f4a;margin:0 0 10px">2</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0;text-wrap:pretty">Em poucos dias eu monto um site personalizado, com a sua cara, e te mostro pronto.</p>
+    </div>
+    <div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;color:#8a6f4a;margin:0 0 10px">3</p>
+      <p style="font-size:15px;line-height:1.8;color:#3b3630;margin:0;text-wrap:pretty">Se gostar, a gente conversa de valor: cobrança única, sem mensalidade, atualizações inclusas. Se não gostar, sem problema nenhum.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="background:#efe9df;padding:clamp(72px,10vw,140px) clamp(24px,7vw,110px);text-align:center">
+  <p style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#8a6f4a;margin:0 0 22px">a próxima proposta pode sair diferente</p>
+  <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(32px,4.4vw,60px);margin:0 auto;line-height:1.15;max-width:18ch;text-wrap:balance;color:#14110f">Me chama e me conta como você envia as suas hoje.</h2>
+  <a class="btn-wa" href={waLink} style="display:inline-block;margin-top:40px;background:#14110f;color:#fff;font-size:13px;letter-spacing:.22em;text-transform:uppercase;padding:18px 38px;min-height:44px;box-sizing:border-box">Chamar no WhatsApp</a>
+  <p style="font-size:14px;color:#6d675f;margin:22px 0 0">Sem formulário, sem compromisso. É só uma conversa.</p>
+</section>
+
+<footer style="padding:34px clamp(24px,6vw,110px);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;font-size:12px;letter-spacing:.14em;color:#6d675f">
+  <span>© {MARCA} · sites para fotógrafos</span>
+  <a href="https://engenheiroparanhos.com.br" target="_blank" rel="noopener noreferrer" style="border-bottom:1px solid #c9c3ba;padding-bottom:3px">quem faz · engenheiroparanhos.com.br</a>
+</footer>
+
+<script>
+  // Empacotado pelo Astro num arquivo próprio (nada de script inline), para a
+  // página rodar sob Content-Security-Policy com script-src 'self'.
+
+  /** Busca por id e falha alto se o elemento sumiu do HTML. */
+  function pega<T extends HTMLElement>(id: string): T {
+    const el = document.getElementById(id);
+    if (!el) throw new Error(`Elemento #${id} não encontrado`);
+    return el as T;
+  }
+
+  // ---- Demo interativa (seção 02) ----
+  (function () {
+    const nomeI = pega<HTMLInputElement>("dm-nome");
+    const valorI = pega<HTMLInputElement>("dm-valor");
+    const btn = pega<HTMLButtonElement>("dm-salvar");
+    const siteNome = pega("site-nome");
+    const siteValor = pega("site-valor");
+    const card = pega("site-card");
+    const salvando = pega("site-salvando");
+    const publicado = pega("site-publicado");
+    const dmPub = pega("dm-publicado");
+
+    let tSalvar: ReturnType<typeof setTimeout> | undefined;
+    let tRealce: ReturnType<typeof setTimeout> | undefined;
+    let ocupado = false;
+
+    function salvar() {
+      if (ocupado) return;
+      ocupado = true;
+      btn.textContent = "salvando…";
+      salvando.style.display = "inline";
+      publicado.style.display = "none";
+      dmPub.style.display = "none";
+      clearTimeout(tSalvar);
+      clearTimeout(tRealce);
+
+      tSalvar = setTimeout(function () {
+        ocupado = false;
+        btn.textContent = "Salvar alterações";
+        salvando.style.display = "none";
+
+        // textContent (nunca innerHTML): o que a pessoa digita entra como
+        // texto, não como marcação.
+        siteNome.textContent = nomeI.value.trim() || "Seu pacote";
+        const valor = (valorI.value || "0").replace(/[^\d.,]/g, "") || "0";
+        siteValor.textContent = "R$ " + valor;
+
+        publicado.style.display = "block";
+        dmPub.style.display = "inline";
+        card.style.borderColor = "#c9b48d";
+        card.style.background = "rgba(138,111,74,.28)";
+        card.style.transform = "scale(1.025)";
+        siteValor.style.color = "#e8cf9e";
+
+        tRealce = setTimeout(function () {
+          card.style.borderColor = "rgba(255,255,255,.22)";
+          card.style.background = "transparent";
+          card.style.transform = "scale(1)";
+          siteValor.style.color = "#fff";
+        }, 1600);
+      }, 750);
+    }
+
+    btn.addEventListener("click", salvar);
+    const aoTeclar = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        salvar();
+      }
+    };
+    nomeI.addEventListener("keydown", aoTeclar);
+    valorI.addEventListener("keydown", aoTeclar);
+  })();
+
+  // ---- Vitrine: abas da janela (seção 05) ----
+  (function () {
+    const frame = pega<HTMLIFrameElement>("janela-frame");
+    const urlEl = pega("janela-url");
+    const legEl = pega("janela-legenda");
+    const novaAba = pega<HTMLAnchorElement>("janela-nova-aba");
+
+    const abas = {
+      site: {
+        btn: pega<HTMLButtonElement>("btn-site"),
+        src: "/demos/site/index.html",
+        url: "estudionome.com.br",
+        leg: "role dentro da janela · o site é este, de verdade",
+      },
+      proposta: {
+        btn: pega<HTMLButtonElement>("btn-proposta"),
+        src: "/demos/proposta.html",
+        url: "seuestudio.com.br/proposta/familia",
+        leg: "role dentro da janela · é assim que a sua cliente vê a proposta",
+      },
+      painel: {
+        btn: pega<HTMLButtonElement>("btn-painel"),
+        src: "/demos/painel.html",
+        url: "seuestudio.com.br/admin",
+        leg: "role dentro da janela · é assim que você edita tudo sozinha",
+      },
+    } as const;
+
+    type Aba = keyof typeof abas;
+    const nomes = Object.keys(abas) as Aba[];
+
+    function pintar(escolhida: Aba) {
+      for (const nome of nomes) {
+        const ligada = nome === escolhida;
+        const b = abas[nome].btn;
+        b.style.background = ligada ? "#e9e6e1" : "transparent";
+        b.style.color = ligada ? "#14110f" : "rgba(255,255,255,.75)";
+        b.style.border = "1px solid " + (ligada ? "#e9e6e1" : "rgba(255,255,255,.3)");
+        b.setAttribute("aria-selected", ligada ? "true" : "false");
+      }
+      const d = abas[escolhida];
+      if (frame.getAttribute("src") !== d.src) frame.setAttribute("src", d.src);
+      urlEl.textContent = d.url;
+      legEl.textContent = d.leg;
+      // visibility:hidden continua focável pelo teclado; hidden remove de vez
+      novaAba.hidden = escolhida !== "site";
+    }
+
+    for (const nome of nomes) {
+      abas[nome].btn.addEventListener("click", () => pintar(nome));
+    }
+    // Setas navegam entre as abas, como manda o padrão de tablist
+    for (const nome of nomes) {
+      abas[nome].btn.addEventListener("keydown", (e: KeyboardEvent) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        e.preventDefault();
+        const i = nomes.indexOf(nome);
+        const passo = e.key === "ArrowRight" ? 1 : -1;
+        const alvo = nomes[(i + passo + nomes.length) % nomes.length]!;
+        pintar(alvo);
+        abas[alvo].btn.focus();
+      });
+    }
+
+    pintar("site");
+  })();
+
+  // ---- Instagram: feed que se atualiza sozinho (seção 04) ----
+  (function () {
+    const grid = pega("ig-grid");
+
+    const fotos = [
+      "/assets/ph-l-01.svg", "/assets/ph-l-02.svg", "/assets/ph-l-03.svg", "/assets/ph-l-04.svg",
+      "/assets/ph-hero-01.svg", "/assets/ph-hero-02.svg", "/assets/ph-hero-03.svg",
+      "/assets/ph-hero-05.svg", "/assets/ph-hero-06.svg", "/assets/ph-p-04.svg", "/assets/ph-p-05.svg",
+    ];
+    const QUADROS = 9;
+    const INTERVALO = 3200;
+    const REALCE = 1200;
+
+    // Os nove quadros são criados uma vez e depois só têm o src trocado.
+    // Recriar o HTML a cada volta piscaria e recarregaria as imagens.
+    const quadros = Array.from({ length: QUADROS }, () => {
+      const raiz = document.createElement("span");
+      raiz.className = "ig-tile";
+      raiz.style.cssText = "position:relative;display:block;aspect-ratio:1;overflow:hidden";
+
+      const img = document.createElement("img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
+
+      const tarja = document.createElement("span");
+      tarja.className = "ig-ov";
+      tarja.textContent = "ver no instagram";
+      tarja.style.cssText =
+        "position:absolute;inset:0;background:rgba(20,17,15,.5);display:flex;align-items:flex-end;" +
+        "padding:9px;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#fff";
+
+      const etiqueta = document.createElement("span");
+      etiqueta.textContent = "novo post";
+      etiqueta.hidden = true;
+      etiqueta.style.cssText =
+        "position:absolute;top:6px;left:6px;background:#8a6f4a;color:#fff;font-size:7px;" +
+        "letter-spacing:.16em;text-transform:uppercase;padding:3px 7px";
+
+      raiz.append(img, tarja, etiqueta);
+      return { raiz, img, etiqueta };
+    });
+    grid.append(...quadros.map((q) => q.raiz));
+
+    let topo = 0;
+    function pintarFeed(realcar: boolean) {
+      quadros.forEach((q, k) => {
+        q.img.src = fotos[(topo + k) % fotos.length]!;
+        const novo = realcar && k === 0;
+        q.raiz.style.boxShadow = novo ? "0 0 0 3px #8a6f4a inset" : "0 0 0 0 rgba(0,0,0,0) inset";
+        q.etiqueta.hidden = !novo;
+      });
+    }
+    pintarFeed(false);
+
+    let giro: ReturnType<typeof setInterval> | undefined;
+    let tRealce: ReturnType<typeof setTimeout> | undefined;
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    function parar() {
+      clearInterval(giro);
+      clearTimeout(tRealce);
+      giro = undefined;
+    }
+    function girar() {
+      // WCAG 2.2.2: nada se move sozinho para quem pediu menos movimento
+      if (giro || semMovimento.matches) return;
+      giro = setInterval(function () {
+        topo = (topo + 1) % fotos.length;
+        pintarFeed(true);
+        tRealce = setTimeout(() => pintarFeed(false), REALCE);
+      }, INTERVALO);
+    }
+
+    // Só gira enquanto a seção está na tela: não adianta gastar bateria
+    // animando um bloco que ficou dez telas acima.
+    new IntersectionObserver(
+      (entradas) => entradas.forEach((e) => (e.isIntersecting ? girar() : parar())),
+      { threshold: 0.15 },
+    ).observe(grid);
+
+    semMovimento.addEventListener("change", function () {
+      parar();
+      pintarFeed(false);
+      girar();
+    });
+  })();
+</script>
+</body>
+</html>

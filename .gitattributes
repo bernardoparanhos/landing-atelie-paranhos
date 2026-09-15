@@ -1,0 +1,10 @@
+# Normaliza as quebras de linha: no repositório sempre LF, no disco o que o
+# sistema usar. Sem isto, um commit feito no Windows aparece como "arquivo
+# inteiro alterado" para quem estiver no Mac ou Linux.
+* text=auto eol=lf
+
+# Binários: não mexer.
+*.woff2 binary
+*.png    binary
+*.jpg    binary
+*.ico    binary

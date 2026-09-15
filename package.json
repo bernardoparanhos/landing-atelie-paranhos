@@ -1,0 +1,26 @@
+{
+  "name": "landing-atelie-paranhos",
+  "description": "Landing page de uma página só para venda de sites a fotógrafos. Estática, sem dependências de runtime.",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "dev:rede": "astro dev --host",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "verificar": "npm run check && npm run build && npm audit --audit-level=high"
+  },
+  "dependencies": {
+    "astro": "^7.3.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}
