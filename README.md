@@ -109,7 +109,14 @@ componente: acerte-os também.
 > **Imagem nova vai em `src/assets/`, não em `public/`.** O que está em
 > `src/assets/` passa pelo otimizador (vira WebP, ganha `srcset` e
 > `width`/`height`); o que está em `public/` é copiado cru. Os quatro prints de
-> cliente somavam 2,2 MB como PNG e hoje a maior variante tem 50 KB.
+> cliente somavam 2,2 MB como PNG; hoje o navegador baixa **19 KB** cada um
+> numa tela comum e 55 KB numa retina.
+>
+> **E toda imagem com largura em CSS precisa de `height: auto`.** A regra
+> global do [`Base.astro`](src/layouts/Base.astro) já garante — não a remova.
+> Sem ela, o atributo `height` que o `<Image>` emite passa a valer e a imagem
+> fica numa caixa da altura do arquivo original. Ver
+> [docs/ARQUITETURA.md](docs/ARQUITETURA.md#toda-imagem-precisa-de-heightauto).
 
 ---
 

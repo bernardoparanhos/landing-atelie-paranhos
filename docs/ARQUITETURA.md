@@ -130,6 +130,31 @@ bloqueiam navegar a janela de cima, abrir pop-ups, enviar formulários, iniciar
 downloads e abrir diálogos modais. Detalhes em
 [SEGURANCA.md](SEGURANCA.md#o-iframe-das-seções-02-e-03).
 
+### Toda imagem precisa de `height:auto`
+
+O componente `<Image>` do Astro emite `width` e `height` como **atributos
+HTML** — é assim que o navegador reserva o espaço da imagem antes de baixá-la,
+e é bom que seja assim.
+
+A armadilha: se o CSS define só a largura (`width:100%`) e não define altura,
+o atributo `height` continua valendo. A imagem fica numa caixa com a largura do
+contêiner e a **altura do arquivo original**. Pior: com as duas dimensões
+definidas, `aspect-ratio` é silenciosamente ignorado — ele só age quando uma
+delas é `auto`.
+
+O sintoma depende do `object-fit`: com `cover` a imagem aparece ampliada e
+cortada; com `contain`, cercada por uma moldura enorme. Nos dois casos o build
+passa, o type-check passa, e só olhando a tela se percebe.
+
+Por isso a regra global do `Base.astro` traz:
+
+```css
+img { display: block; max-width: 100%; height: auto; }
+```
+
+As poucas imagens que querem altura fixa (as duas do mini-painel na seção 02)
+declaram `height` em `style=""`, que vence a folha de estilo.
+
 ### O `sitemap.xml` sai vazio até alguém preencher `SITE`
 
 Um sitemap apontando para o endereço errado manda o Google indexar o que não
