@@ -5,8 +5,10 @@ import { brand, TITULO, DESCRICAO, base, canonical, clients } from "@/config/sit
 interface Props {
   title?: string;
   description?: string;
+  /** Tira a página do índice do Google. Só o 404 usa. */
+  noindex?: boolean;
 }
-const { title = TITULO, description = DESCRICAO } = Astro.props;
+const { title = TITULO, description = DESCRICAO, noindex = false } = Astro.props;
 
 // Imagem da prévia de compartilhamento: o print do site de uma cliente.
 // É o que faz sentido ver em cima do link no WhatsApp — a prova, não um
@@ -56,9 +58,9 @@ const csp = [
 <meta name="color-scheme" content="light" />
 <meta name="theme-color" content="#fdf5ef" />
 <meta name="author" content={brand} />
-<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
 {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
-{canonical && <link rel="canonical" href={canonical} />}
+{canonical && !noindex && <link rel="canonical" href={canonical} />}
 
 <!-- O SVG atende todo navegador moderno (e troca de cor em aba escura).
      Os PNG são para navegador antigo e para o iOS; cada tamanho tem a
