@@ -1,0 +1,43 @@
+---
+import { formats, wa } from "@/config/site";
+---
+<section id="formatos" style="background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">05</span>Os três formatos</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">O primeiro passo é escolher o que você precisa.</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:56ch;margin:0 0 38px;text-wrap:pretty">Pagamento único nos três. Sem mensalidade, sem taxa escondida, sem plano para remover selo de ninguém.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:clamp(16px,2.4vw,26px);align-items:stretch">
+      {formats.map((fmt) => {
+        const dark = !!fmt.featured;
+        return (
+          <div style={"border-radius:3px;padding:clamp(24px,3vw,32px);display:flex;flex-direction:column;position:relative;" + (dark ? "border:1px solid var(--ink);background:var(--ink);color:#fff" : "border:1px solid var(--line);background:#fff")}>
+            {dark && <span style="position:absolute;top:0;right:0;background:var(--gold);color:#fff;font-size:12px;font-weight:500;padding:6px 12px">mais escolhido</span>}
+            <p style={"font-size:13px;font-weight:500;margin:0 0 14px;" + (dark ? "color:var(--gold-light)" : "color:var(--gold)")}>{fmt.tag}</p>
+            <p style="font-size:22px;font-weight:500;letter-spacing:-.02em;margin:0 0 8px">{fmt.name}</p>
+            <p style="font-size:34px;font-weight:300;letter-spacing:-.03em;margin:0 0 2px">{fmt.price}</p>
+            <p style={"font-size:13.5px;margin:0 0 20px;" + (dark ? "color:rgba(255,255,255,.6)" : "color:var(--muted)")}>pagamento único</p>
+            <p style={"font-size:15px;line-height:1.7;margin:0 0 18px;text-wrap:pretty;" + (dark ? "color:rgba(255,255,255,.82)" : "color:var(--ink-soft)")}>{fmt.blurb}</p>
+
+            <ul style="list-style:none;padding:0;margin:0 0 22px;display:flex;flex-direction:column;gap:10px">
+              {fmt.features.map((feat) => (
+                <li style={"font-size:14.5px;line-height:1.55;display:flex;gap:10px;" + (dark ? "color:rgba(255,255,255,.82)" : "color:var(--ink-soft)")}><span aria-hidden="true" style={dark ? "color:var(--gold-light)" : "color:var(--gold)"}>—</span>{feat}</li>
+              ))}
+            </ul>
+
+            <a class={dark ? "btn-light" : "btn-dark"} href={wa(fmt.waMessage)} target="_blank" rel="noopener" style="display:block;text-align:center;font-size:14.5px;font-weight:500;padding:14px 18px;border-radius:2px;margin:auto 0 14px;min-height:44px">{fmt.cta}</a>
+            <p style={"font-size:13.5px;line-height:1.6;margin:0;padding-top:14px;" + (dark ? "color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.18)" : "color:var(--muted);border-top:1px solid var(--line)")}>{fmt.excludes}</p>
+          </div>
+        );
+      })}
+    </div>
+
+    <div style="margin-top:clamp(26px,4vw,40px);border:1px solid var(--gold);border-radius:3px;background:#fcefe6;padding:clamp(24px,3.4vw,34px);display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(18px,3vw,40px);align-items:center">
+      <div>
+        <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 10px">O domínio é à parte</p>
+        <p style="font-size:clamp(20px,2.4vw,27px);font-weight:300;letter-spacing:-.02em;line-height:1.25;margin:0;text-wrap:balance">R$ 40 a R$ 65 por ano, pagos por você, no seu nome.</p>
+      </div>
+      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);margin:0;text-wrap:pretty">Você registra direto no registro.br ou na Hostinger, com o seu CPF. É o único custo que se repete, e ele nunca passa por mim: o endereço é seu de verdade.</p>
+    </div>
+  </div>
+</section>

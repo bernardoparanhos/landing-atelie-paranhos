@@ -1,0 +1,65 @@
+---
+import { template, clients } from "@/config/site";
+
+// Os nomes vêm do config para a frase não mentir se um cliente sair da lista.
+const nomes = clients.map((c) => c.name);
+const amarra =
+  nomes.length >= 2
+    ? `Você acabou de ver: ${nomes[0]} e ${nomes[1]} saíram desta mesma base e não parecem a mesma coisa.`
+    : "A base é a mesma; o que entra nela é que faz a diferença.";
+---
+<section id="template" style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
+  <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">03</span>Nosso template</p>
+
+  <div style="display:flex;flex-direction:column;gap:clamp(28px,4vw,44px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:clamp(22px,4vw,56px);align-items:start">
+      <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0;max-width:18ch">A base é uma só. O que muda é tudo o que entra na sua página.</h2>
+
+      <div>
+        {/* A seção 01 já provou isto com dois sites reais. Em vez de afirmar
+            de novo no vazio, a frase aponta para a prova que a pessoa
+            acabou de rolar. */}
+        <p style="font-size:16px;line-height:1.75;color:var(--ink-soft);margin:0 0 18px;text-wrap:pretty"><strong style="font-weight:500;color:var(--ink)">{amarra}</strong> É a estrutura pronta e testada que todo mundo fecha hoje: início, sobre mim, ensaios, galeria, propostas e contato. As fotos, os textos, as cores e os pacotes passam a ser os seus.</p>
+        <p style="font-size:16px;line-height:1.75;color:var(--ink-soft);margin:0 0 22px;text-wrap:pretty">Novos templates estão em desenho. Quando entrarem, aparecem aqui, e quem já tem a sua página continua com ela, funcionando do mesmo jeito.</p>
+        <a href={template.liveUrl} target="_blank" rel="noopener" style="display:inline-block;font-size:15px;font-weight:500;color:var(--ink);border-bottom:1px solid var(--gold);padding-bottom:5px;min-height:44px">Navegar no template inteiro ↗</a>
+      </div>
+    </div>
+
+    <div>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 18px 44px rgba(46,37,33,.08)">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0e3da">
+          <span style="display:flex;gap:6px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i></span>
+          <span style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">estudionome.com.br</span>
+        </div>
+
+        {/* A janela carrega o template de verdade, do próprio domínio.
+            Precisa ser local por duas razões: a CSP tem frame-src 'self',
+            e é este render que parece um site pronto — um placeholder numa
+            seção que afirma "pronto e testado" diz o contrário do texto. */}
+        <iframe
+          class="janela-frame"
+          src={template.embedUrl}
+          title="Template base, versão de demonstração"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+          referrerpolicy="no-referrer"
+          style="display:block;width:100%;height:clamp(440px,70vh,680px);border:0;background:var(--bg)"
+        ></iframe>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center">
+        {template.pages.map((pg) => (
+          <span style={"font-size:13px;border-radius:40px;padding:6px 13px;" + (pg === template.highlight ? "color:#fff;background:var(--gold);border:1px solid var(--gold)" : "color:var(--ink-soft);background:#fff;border:1px solid var(--line)")}>{pg}</span>
+        ))}
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">Role dentro da janela para conhecer a estrutura inteira.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* A janela já tem a moldura do navegador desenhada em volta: uma barra de
+     rolagem do iframe por cima dela estraga a ilusão de site pronto. */
+  .janela-frame { scrollbar-width: none; -ms-overflow-style: none; }
+  .janela-frame::-webkit-scrollbar { width: 0; height: 0; display: none; }
+</style>

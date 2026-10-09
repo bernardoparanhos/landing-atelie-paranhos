@@ -69,6 +69,8 @@ export type ClientStat = { label: string; value: string };
 export type Client = {
   id: string;
   name: string;
+  /** Primeiro nome ou apelido curto, para rotulos de link sem quebra de linha. */
+  shortName: string;
   niche: string;
   /** Inicial no avatar do depoimento. */
   initial: string;
@@ -86,6 +88,7 @@ export const clients: Client[] = [
   {
     id: "tatiane",
     name: "Tatiane Piasecki",
+    shortName: "da Tatiane",
     niche: "fotografia de família",
     initial: "T",
     siteUrl: "https://www.tatianepiaseckifotografia.com.br/",
@@ -103,6 +106,7 @@ export const clients: Client[] = [
   {
     id: "topazio",
     name: "Fotos Topázio",
+    shortName: "da Topázio",
     niche: "casamento, família e ensaios",
     initial: "E",
     siteUrl: "https://fotostopazio.com.br/",

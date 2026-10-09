@@ -1,0 +1,16 @@
+---
+import { perks } from "@/config/site";
+---
+<section id="incluso" style="background:#fff;border-top:1px solid var(--line)">
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(54px,7vw,88px) clamp(22px,6vw,100px)">
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 30px"><span style="opacity:.55;margin-right:10px">06</span>O que vem junto, sempre</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(20px,3vw,40px)">
+      {perks.map((p) => (
+        <div style="border-top:1px solid var(--line);padding-top:18px">
+          <p style="font-size:18px;font-weight:500;letter-spacing:-.02em;margin:0 0 8px">{p.title}</p>
+          <p style="font-size:15px;line-height:1.7;color:var(--ink-soft);margin:0;text-wrap:pretty">{p.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
