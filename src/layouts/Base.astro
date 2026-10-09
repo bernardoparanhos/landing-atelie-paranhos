@@ -119,7 +119,14 @@ const csp = [
   }
   a { color: inherit; text-decoration: none; }
   a:hover { color: var(--gold); }
-  img { display: block; max-width: 100%; }
+  /* height:auto e obrigatorio, nao enfeite: o <Image> do Astro emite
+     width="" e height="" como atributos, e sem esta regra o height do
+     atributo vence quando o CSS so define a largura. A imagem fica numa
+     caixa da altura original (642px aqui), e aspect-ratio e ignorado,
+     porque ele so age quando uma das dimensoes e auto. O par
+     width/height continua servindo para o navegador reservar o espaco
+     antes de baixar a imagem, que e para o que ele existe. */
+  img { display: block; max-width: 100%; height: auto; }
 
   .btn-dark { background: var(--ink); color: #fff; transition: background .25s; }
   .btn-dark:hover { background: var(--gold); color: #fff; }
