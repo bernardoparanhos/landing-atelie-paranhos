@@ -2,7 +2,7 @@
 
 ## Antes de subir, uma vez
 
-1. **Preencha o endereço** em [`src/config.ts`](../src/config.ts):
+1. **Confira o endereço** em [`src/config/site.ts`](../src/config/site.ts):
 
    ```ts
    export const SITE = "https://seudominio.com.br";
@@ -48,7 +48,7 @@
 >
 > O que torna o defeito difícil de ler: **as imagens continuam carregando**,
 > porque existe uma pasta `/demos/assets/` com os mesmos arquivos. E as outras
-> duas demos não quebram, porque `proposta.html` e `painel.html` já estão direto
+> duas demos não quebram, porque `painel.html` e `site/index.html` já estão direto
 > em `/demos/` e não mudam de pasta-base. O sintoma é "só a aba *O site* está
 > estranha", que não parece problema de configuração de hospedagem.
 >

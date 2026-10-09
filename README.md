@@ -1,12 +1,15 @@
-# Ateliê Paranhos · Landing
+# Páginas para fotógrafos · Bernardo Paranhos
 
-Landing page de uma página só que vende sites para fotógrafos. Estática: o que
-vai para o ar é HTML, CSS, um arquivo de JavaScript e imagens. Não existe
-servidor, banco de dados nem login — e é de propósito, porque nada disso pode
-quebrar nem ser invadido.
+Landing de uma página só que vende páginas e páginas de proposta para
+fotógrafos. Estática: o que vai para o ar é HTML, CSS, um arquivo de JavaScript
+e imagens. Não existe servidor, banco de dados nem login — e é de propósito,
+porque nada disso pode quebrar nem ser invadido.
 
-Dentro dela, a seção 04 mostra três demonstrações navegáveis (o site, a
-proposta e o painel administrativo) dentro de uma "janela" de navegador.
+Endereço final: **fotografos.engenheiroparanhos.com.br**
+
+A prova da página são dois sites de cliente reais (seção 01). Duas seções
+embutem uma "janela de navegador" com demonstrações navegáveis: o painel
+administrativo (seção 02) e o template base (seção 03).
 
 ---
 
@@ -33,7 +36,7 @@ npm run dev:rede
 ## Publicar
 
 ```bash
-npm run build      # gera dist/ (HTML estático, ~640 KB)
+npm run build      # gera dist/
 npm run preview    # confere o build localmente antes de subir
 ```
 
@@ -47,39 +50,66 @@ npm run verificar   # tipos + build + auditoria de dependências
 
 ---
 
-## O que editar
+## Onde mexer
 
-### Para publicar: `src/config.ts`
+### Quase tudo: `src/config/site.ts`
 
-É o único arquivo que precisa de ajuste. Ele traz marca, WhatsApp, descrição e —
-o mais importante — o endereço final do site:
+**É o único arquivo que você precisa abrir para mudar o que a página diz.**
+Nenhuma seção tem texto cravado dentro dela: todas leem daqui.
 
-```ts
-export const SITE = "";   // ex.: "https://atelieparanhos.com.br"
-```
+| Quero mudar | Edito |
+|---|---|
+| Preço de um formato | `formats[]` → o campo `price` |
+| O que um formato inclui | `formats[]` → `features[]` |
+| Adicionar um cliente novo | empurrar um objeto em `clients[]` + os dois prints em `src/assets/` |
+| Um depoimento | `clients[]` → `quote` |
+| Os passos do "como funciona" | `steps[]` |
+| O que vem junto sempre | `perks[]` |
+| Número de WhatsApp | `whatsapp` |
+| Mensagem que já vem escrita no WhatsApp | `defaultWaMessage` e os `waMessage` de cada formato |
+| Endereço do site | `SITE` |
 
-Enquanto estiver vazio, o site funciona normalmente, mas **sem** canonical, sem
-prévia de compartilhamento (Open Graph) e com o `sitemap.xml` vazio. É de
-propósito: um endereço errado nessas tags é pior do que tag nenhuma. Preencha
-antes de publicar.
+`SITE` merece atenção. Se ficar vazio, o site funciona normalmente, mas **sem**
+canonical, sem prévia de compartilhamento (Open Graph) e com o `sitemap.xml`
+vazio. É de propósito: um endereço errado nessas tags é pior do que tag
+nenhuma.
 
-### Conteúdo e estética
+### A ordem das seções
+
+[`src/pages/index.astro`](src/pages/index.astro) tem 25 linhas e é só a ordem em
+que as seções entram. Trocar duas de lugar é trocar duas linhas.
+
+| # | Seção | Arquivo |
+|---|---|---|
+| — | topo | [`src/components/Hero.astro`](src/components/Hero.astro) |
+| 01 | exemplos no ar + depoimentos | [`Exemplos.astro`](src/components/Exemplos.astro) |
+| 02 | o painel, editável na própria página | [`Painel.astro`](src/components/Painel.astro) |
+| 03 | o template, numa janela | [`Template.astro`](src/components/Template.astro) |
+| 04 | como funciona | [`ComoFunciona.astro`](src/components/ComoFunciona.astro) |
+| 05 | os três formatos | [`Formatos.astro`](src/components/Formatos.astro) |
+| 06 | o que vem junto | [`Incluso.astro`](src/components/Incluso.astro) |
+| — | chamada final | [`CTA.astro`](src/components/CTA.astro) |
+| — | rodapé | [`Footer.astro`](src/components/Footer.astro) |
+
+Se você mudar a ordem, **os números são escritos à mão** dentro de cada
+componente: acerte-os também.
+
+### O resto
 
 | O quê | Onde |
 |---|---|
-| Textos, seções e visual da landing | [`src/pages/index.astro`](src/pages/index.astro) |
+| `<head>`, CSP, favicon, paleta, fontes | [`src/layouts/Base.astro`](src/layouts/Base.astro) |
 | Página de erro | [`src/pages/404.astro`](src/pages/404.astro) |
-| Fotos do topo | [`src/assets/`](src/assets/) — o Astro redimensiona e converte sozinho |
-| Demonstração: o site | [`public/demos/site/`](public/demos/site/) |
-| Demonstração: a proposta | [`public/demos/proposta.html`](public/demos/proposta.html) |
+| Prints dos clientes | [`src/assets/`](src/assets/) — o Astro redimensiona e converte sozinho |
+| Demonstração: o template | [`public/demos/site/`](public/demos/site/) |
 | Demonstração: o painel | [`public/demos/painel.html`](public/demos/painel.html) + [`painel.js`](public/demos/painel.js) |
 | Fontes | [`public/fonts/`](public/fonts/) — auto-hospedadas |
 | Cabeçalhos de segurança | [`public/_headers`](public/_headers) e [`vercel.json`](vercel.json) |
 
-> **Fotos do topo vão em `src/assets/`, não em `public/`.** O que está em
+> **Imagem nova vai em `src/assets/`, não em `public/`.** O que está em
 > `src/assets/` passa pelo otimizador (vira WebP, ganha `srcset` e
-> `width`/`height`); o que está em `public/` é copiado cru. As duas fotos do
-> hero pesavam 6 MB em `public/` e hoje pesam 62 KB.
+> `width`/`height`); o que está em `public/` é copiado cru. Os quatro prints de
+> cliente somavam 2,2 MB como PNG e hoje a maior variante tem 50 KB.
 
 ---
 
@@ -99,5 +129,19 @@ antes de publicar.
 
 ## Identidade
 
-Fontes: Cormorant Garamond (títulos) + Jost (texto), auto-hospedadas.
-Paleta: tinta `#14110f` · papel `#e9e6e1` · ouro `#8a6f4a` · texto `#3b3630`.
+Fonte: **Outfit** (200 a 600), auto-hospedada. As demonstrações em `/demos/`
+usam Cormorant Garamond + Jost de propósito: ali quem fala é o site da cliente,
+não esta página.
+
+Paleta, definida em `:root` no [`Base.astro`](src/layouts/Base.astro):
+
+| token | valor | uso |
+|---|---|---|
+| `--bg` | `#fdf5ef` | papel |
+| `--ink` | `#2e2521` | tinta, faixas escuras |
+| `--ink-soft` | `#574b44` | texto corrido |
+| `--muted` | `#8a7d74` | legendas |
+| `--gold` | `#8a6f4a` | rótulos, destaques |
+| `--gold-light` | `#c9b48d` | o mesmo, sobre fundo escuro |
+| `--line` | `#edded3` | bordas |
+| `--card-dark` | `#3a302b` | cartões na faixa escura |

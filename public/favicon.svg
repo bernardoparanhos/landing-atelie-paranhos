@@ -17,11 +17,11 @@
   <style>
     /* Em aba escura o traço tinta some. Vira papel. */
     @media (prefers-color-scheme: dark) {
-      .tinta { stroke: #e9e6e1 }
+      .tinta { stroke: #fdf5ef }
     }
   </style>
 
-  <g class="tinta" stroke="#14110f" stroke-width="3">
+  <g class="tinta" stroke="#2e2521" stroke-width="3">
     <!-- caules -->
     <path d="M55 96 C50 82 44 70 34 62"/>
     <path d="M55 96 C60 84 66 74 76 68"/>

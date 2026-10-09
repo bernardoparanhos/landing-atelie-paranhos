@@ -27,7 +27,7 @@ npm run verificar
 npm run build && npm run preview   # e abrir no navegador
 ```
 
-Confira, no `preview`: as três abas da seção 05 carregam, a demo interativa
+Confira, no `preview`: as janelas das seções 02 e 03 carregam, o mini-painel
 salva, e o console (F12) está limpo.
 
 > Se `npm audit` acusar um pacote **`extraneous`**, é resto de uma atualização
@@ -171,7 +171,7 @@ const com=sw=>Buffer.from(base.split('stroke-width=\"3\"').join('stroke-width=\"
 (async()=>{
   await sharp(com('4.2'),{density:2400}).resize(16,16,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}).png().toFile('public/favicon-16.png');
   await sharp(com('3'),{density:2400}).resize(32,32,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}).png().toFile('public/favicon-32.png');
-  await sharp(com('3'),{density:2400}).resize(160,160,{fit:'contain',background:'#e9e6e1'}).extend({top:10,bottom:10,left:10,right:10,background:'#e9e6e1'}).flatten({background:'#e9e6e1'}).png().toFile('public/apple-touch-icon.png');
+  await sharp(com('3'),{density:2400}).resize(160,160,{fit:'contain',background:'#fdf5ef'}).extend({top:10,bottom:10,left:10,right:10,background:'#fdf5ef'}).flatten({background:'#fdf5ef'}).png().toFile('public/apple-touch-icon.png');
 })();
 "
 ```
@@ -207,5 +207,5 @@ sharp('public/favicon-16.png').resize(320,320,{kernel:'nearest'}).toFile('zoom16
 | Só a aba *O site* quebra, e só em produção | `cleanUrls` ligado no `vercel.json` — ver [DEPLOY.md](DEPLOY.md) |
 | Fonte errada, tudo em Georgia | Caminho quebrado em `public/fonts/fontes.css` |
 | Barra de rolagem horizontal | Alguma `minmax()` nova sem `min()`, ou largura fixa |
-| Prévia sem imagem no WhatsApp | `SITE` vazio em `src/config.ts` no momento do build |
+| Prévia sem imagem no WhatsApp | `SITE` vazio em `src/config/site.ts` no momento do build |
 | `npm audit` acusa pacote `extraneous` | Resto de atualização; `npm prune` |
