@@ -20,13 +20,13 @@ const quotes = clients.filter((c) => c.quote);
               for o print que entrar aqui depois. A caixa fica 2/1, que e
               quase a proporcao dos prints, entao a tarja preta e minima e as
               duas colunas continuam alinhadas. */}
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.12)">
+          <div style="display:grid;grid-template-columns:1fr;gap:1px;background:rgba(255,255,255,.12)">
             <a href={c.siteUrl} target="_blank" rel="noopener" style="display:block;position:relative">
-              <Image src={c.shotSite} alt={"Site de " + c.name} widths={[360, 480, 720, 960]} sizes="(max-width: 760px) 45vw, 240px" quality={92} style="width:100%;height:auto;aspect-ratio:2/1;object-fit:contain;background:var(--card-dark)" />
+              <Image src={c.shotSite} alt={"Site de " + c.name} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto;aspect-ratio:2/1;object-fit:contain;background:var(--card-dark)" />
               <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">o site</span>
             </a>
             <a href={c.proposalsUrl} target="_blank" rel="noopener" style="display:block;position:relative">
-              <Image src={c.shotProposals} alt={"Propostas de " + c.name} widths={[360, 480, 720, 960]} sizes="(max-width: 760px) 45vw, 240px" quality={92} style="width:100%;height:auto;aspect-ratio:2/1;object-fit:contain;background:var(--card-dark)" />
+              <Image src={c.shotProposals} alt={"Propostas de " + c.name} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto;aspect-ratio:2/1;object-fit:contain;background:var(--card-dark)" />
               <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">as propostas</span>
             </a>
           </div>
