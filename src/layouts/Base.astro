@@ -1,0 +1,162 @@
+---
+import { getImage } from "astro:assets";
+import { brand, TITULO, DESCRICAO, base, canonical, clients } from "@/config/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = TITULO, description = DESCRICAO } = Astro.props;
+
+// Imagem da prévia de compartilhamento: o print do site de uma cliente.
+// É o que faz sentido ver em cima do link no WhatsApp — a prova, não um
+// retrato. Reduzida para 1200x630 (proporção que as redes recortam) e
+// servida como JPEG, que todo leitor de OG entende; o PNG original tem
+// 600 KB e não vale a pena mandar inteiro só para a prévia.
+const og = await getImage({
+  src: clients[0].shotSite,
+  width: 1200,
+  height: 630,
+  fit: "cover",
+  position: "top",
+  format: "jpeg",
+  quality: 72,
+});
+
+// Content-Security-Policy como <meta>: vale mesmo quando a hospedagem não
+// aplica cabeçalhos (ex.: GitHub Pages, abrir o dist/ direto). Os cabeçalhos
+// em public/_headers e vercel.json são a camada principal e trazem também
+// frame-ancestors, que <meta> não consegue expressar. Ver docs/SEGURANCA.md.
+// Fora de produção fica desligada para não brigar com o dev toolbar do Astro.
+const csp = [
+  "default-src 'self'",
+  "base-uri 'none'",
+  "object-src 'none'",
+  "form-action 'none'",
+  "script-src 'self'",
+  // 'unsafe-inline' em estilo é inevitável: a página inteira usa style="" nos
+  // elementos. Não abre caminho para execução de script.
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  // As janelas das seções 02 e 03 embutem /demos/, do próprio domínio.
+  "frame-src 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#fdf5ef" />
+<meta name="author" content={brand} />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+{import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+{canonical && <link rel="canonical" href={canonical} />}
+
+<!-- O SVG atende todo navegador moderno (e troca de cor em aba escura).
+     Os PNG são para navegador antigo e para o iOS; cada tamanho tem a
+     espessura de traço própria — ver docs/MANUTENCAO.md. -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:site_name" content={brand} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{canonical && <meta property="og:url" content={canonical} />}
+{base && <meta property="og:image" content={`${base}${og.src}`} />}
+{base && <meta property="og:image:width" content="1200" />}
+{base && <meta property="og:image:height" content="630" />}
+{base && <meta property="og:image:alt" content="Página de uma fotógrafa cliente, no ar" />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{base && <meta name="twitter:image" content={`${base}${og.src}`} />}
+
+<!-- Só o subset latin entra em preload: é o que a página usa da primeira
+     linha em diante. O latin-ext é baixado sob demanda, se algum caractere
+     precisar. As fontes são do próprio domínio — ver public/fonts/fontes.css. -->
+<link rel="preload" href="/fonts/outfit-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/fonts/fontes.css" />
+</head>
+<body>
+  <slot />
+</body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fdf5ef;
+    --ink: #2e2521;
+    --ink-soft: #574b44;
+    --muted: #8a7d74;
+    --gold: #8a6f4a;
+    --gold-light: #c9b48d;
+    --line: #edded3;
+    --card-dark: #3a302b;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Outfit', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--gold); }
+  img { display: block; max-width: 100%; }
+
+  .btn-dark { background: var(--ink); color: #fff; transition: background .25s; }
+  .btn-dark:hover { background: var(--gold); color: #fff; }
+  .btn-light { background: #fff; color: var(--ink); transition: background .25s; }
+  .btn-light:hover { background: #e8cfae; color: var(--ink); }
+  .row-link { transition: background .25s; }
+  .row-link:hover { background: rgba(255,255,255,.12); }
+
+  /* ===================== TRAVAS DE LARGURA =====================
+     A regra da casa: em nenhuma largura, de 280px a 2560px, pode haver
+     barra de rolagem horizontal ou conteúdo cortado pela lateral.
+     As seções usam grid auto-fit/minmax, que já é fluido; isto aqui é a
+     rede embaixo. Ver docs/RESPONSIVIDADE.md. */
+  body { overflow-x: clip; }
+  svg, video, iframe { max-width: 100%; }
+  input, button, textarea, select { max-width: 100%; font-family: inherit; }
+  h1, h2, h3, p, li, span, a { overflow-wrap: break-word; }
+
+  /* ===================== ACESSIBILIDADE =====================
+     Foco visível em qualquer fundo: sem isso, quem navega por teclado se
+     perde nas seções escuras e nos botões sobre fundo claro. */
+  :where(a, button, input, [tabindex]):focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  /* Nas faixas escuras o ouro tem pouco contraste: usa o papel. */
+  section[style*="background:var(--ink)"] :where(a, button):focus-visible,
+  section[style*="background:#2e2521"] :where(a, button):focus-visible {
+    outline-color: var(--bg);
+  }
+
+  /* Respeita quem pediu menos movimento no sistema (WCAG 2.3.3). */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
