@@ -59,6 +59,7 @@ Nenhuma seção tem texto cravado dentro dela: todas leem daqui.
 
 | Quero mudar | Edito |
 |---|---|
+| A linha e o cartão do topo | `hero` → `eyebrow`, `stats[]`, `promessa` |
 | Preço de um formato | `formats[]` → o campo `price` |
 | O que um formato inclui | `formats[]` → `features[]` |
 | Adicionar um cliente novo | empurrar um objeto em `clients[]` + os dois prints em `src/assets/` |

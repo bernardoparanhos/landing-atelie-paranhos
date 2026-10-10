@@ -48,7 +48,7 @@ Uma seção por componente, na ordem em que `index.astro` as empilha.
 
 | # | Seção | O que faz |
 |---|---|---|
-| — | Hero | Promessa principal + três números |
+| — | Hero | Promessa principal, o cartão que responde "e se eu não gostar?" e três números |
 | 01 | Exemplos no ar | Dois sites de cliente reais, com print, link e depoimento |
 | 02 | O painel, agora | Mini-painel editável na própria página + o painel inteiro em `<iframe>` |
 | 03 | Nosso template | O template base em `<iframe>` + link para navegá-lo inteiro |

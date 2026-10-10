@@ -61,6 +61,47 @@ export function wa(message: string): string {
 }
 
 // ------------------------------------------------------------
+// O topo
+// ------------------------------------------------------------
+
+export const hero = {
+  /** A linha pequena, em ouro, acima do título. */
+  eyebrow: "Seu trabalho em um link só",
+
+  /** Os três números na faixa abaixo do botão. */
+  stats: [
+    { value: "até 3 dias", label: "para a primeira página no ar" },
+    { value: "pagamento único", label: "sem mensalidade, sem taxa escondida" },
+    { value: "no seu nome", label: "domínio registrado no seu CPF" },
+  ],
+
+  /**
+   * O cartão à direita do título. É a objeção número um — "e se eu pagar e
+   * não gostar?" — respondida antes de ser feita, no primeiro quadro da
+   * página. O título vem partido em três porque o meio vai em itálico
+   * dourado; juntar tudo numa string só exigiria HTML dentro do config.
+   */
+  promessa: {
+    tituloInicio: "Você vê a página pronta",
+    tituloEnfase: "antes",
+    tituloFim: "de pagar.",
+    colunas: [
+      {
+        rotulo: "por aí",
+        texto: "paga, torce e espera ver no que deu",
+        riscado: true,
+      },
+      {
+        rotulo: "aqui",
+        texto: "vê no ar, depois",
+        enfase: "decide se vale",
+        riscado: false,
+      },
+    ],
+  },
+};
+
+// ------------------------------------------------------------
 // Clientes no ar — a prova da seção 01
 // ------------------------------------------------------------
 
