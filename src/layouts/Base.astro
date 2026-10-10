@@ -156,6 +156,9 @@ const csp = [
      prefers-reduced-motion mais abaixo zera estas transicoes. */
   .btn-gold .seta { display: block; flex: none; transition: transform .25s; }
   .btn-gold:hover .seta { transform: translateY(3px); }
+  /* O mesmo botao apontando para cima: a secao 04 manda de volta para os
+     sites no ar, na 01, e a seta tem de concordar com o destino. */
+  .btn-gold.sobe:hover .seta { transform: translateY(-3px); }
 
   /* ===================== TRAVAS DE LARGURA =====================
      A regra da casa: em nenhuma largura, de 280px a 2560px, pode haver
