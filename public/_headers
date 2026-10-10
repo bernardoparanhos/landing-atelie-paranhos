@@ -13,7 +13,8 @@
   # upload .txt seja interpretado como script).
   X-Content-Type-Options: nosniff
   # Ninguém pode embutir o site num iframe fora do próprio domínio
-  # (clickjacking). O 'self' é necessário: a seção 04 embute /demos/ aqui mesmo.
+  # (clickjacking). O 'self' é necessário: as seções 02 e 03 embutem /demos/
+  # aqui mesmo.
   X-Frame-Options: SAMEORIGIN
   # Não vaza o caminho completo da página de origem para outros domínios.
   Referrer-Policy: strict-origin-when-cross-origin
@@ -27,8 +28,8 @@
   # 'unsafe-inline' aparece só em style-src porque a landing usa style="" em
   # cada elemento (veio assim do gerador de design). Scripts NÃO têm inline:
   # tudo é arquivo externo do próprio domínio, então um XSS não consegue
-  # executar código injetado. frame-ancestors 'self' permite a janela da
-  # seção 04 e bloqueia qualquer outro site de embutir esta página.
+  # executar código injetado. frame-ancestors 'self' permite as janelas das
+  # seções 02 e 03 e bloqueia qualquer outro site de embutir esta página.
   Content-Security-Policy: default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; upgrade-insecure-requests
 
 # Arquivos com hash no nome (gerados pelo Astro) nunca mudam de conteúdo:

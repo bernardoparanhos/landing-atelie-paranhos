@@ -1,5 +1,22 @@
 # Responsividade
 
+## O teste automatico
+
+```bash
+npm run build && npm run preview      # noutro terminal
+npm i -D puppeteer-core
+node scripts/checar-responsividade.mjs
+```
+
+Abre as cinco paginas (home, 404 e as tres demos) em 17 larguras, de 280px a
+2560px, no Chrome que ja esta instalado, e reprova se alguma delas rolar na
+horizontal, tiver alvo de clique menor que 24px ou campo de texto com fonte
+menor que 16px. Quando reprova, diz qual elemento causou.
+
+Vale rodar antes de publicar. **Nada disso aparece no `npm run verificar`**:
+tipos, build e auditoria passam com a pagina vazando pela lateral. Foi assim
+que um `minmax(330px,1fr)` sem `min()` entrou e so foi pego aqui.
+
 A regra que vale para tudo aqui: **em nenhuma largura pode haver barra de
 rolagem horizontal, e nada pode ser cortado pelas laterais.** Testado de 280px
 (menor que qualquer telefone em uso) a 2560px.
@@ -51,8 +68,8 @@ Rodando `npm run dev` (ou `npm run preview`), abra o DevTools (F12), ative o
 modo de dispositivo (Ctrl+Shift+M) e percorra as larguras. Vale conferir:
 
 - `/` — a landing
-- `/demos/site/index.html`, `/demos/proposta.html`, `/demos/painel.html` — as
-  demos também são vistas dentro do iframe estreito da seção 05, onde a área
+- `/demos/site/index.html` e `/demos/painel.html` — as
+  demos também são vistas dentro do iframe estreito das seções 02 e 03, onde a área
   útil é de uns 340px num celular
 - uma URL inexistente, para a página 404
 
@@ -80,13 +97,15 @@ O número é quantos pixels o elemento passa da borda.
 Alguns ajustes andam com a responsividade e estão no mesmo arquivo:
 
 - **Foco visível** (`:focus-visible`) com contraste próprio nas faixas escuras —
-  sem isso, quem navega por teclado se perde na seção 05.
+  sem isso, quem navega por teclado se perde nas faixas escuras.
 - **`prefers-reduced-motion`** desliga a seta que pisca em laço na seção 02, o
-  feed do Instagram da seção 04 e o carrossel automático da demo do site
+  aviso "salvando…" e o carrossel automático da demo do site
   (WCAG 2.2.2 e 2.3.3).
 - **Alvos de toque de 44px** nos botões e links de ação.
 - As fotos da galeria e os cartões de ensaio da demo do site abriam a lightbox
   só no clique; hoje têm `role="button"`, `tabindex="0"` e respondem a
   Enter/Espaço, e o foco volta para onde estava ao fechar.
-- As abas da seção 05 são um `role="tablist"` de verdade: ← e → trocam de aba e
-  `aria-selected` acompanha.
+- As duas janelas (seções 02 e 03) carregam com `loading="lazy"`: num celular
+  em rede lenta, o iframe não concorre com o texto e as fotos que estão acima
+  dele. Cada uma tem `height: clamp(440px, 70vh, 680px)`, então ocupa uma
+  altura útil sem empurrar o resto da página para longe.

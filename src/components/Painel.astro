@@ -1,0 +1,205 @@
+---
+import { painel } from "@/config/site";
+
+const { nome, valor } = painel.exemplo;
+---
+{/*
+  Seção 02, logo depois dos depoimentos, e por um motivo: a cliente acabou
+  de ler "ficou super intuitivo, fácil de usar". A pior coisa a fazer na
+  linha seguinte é mandar a pessoa clicar em "abrir demonstração" e sair
+  da página. Aqui ela põe a mão sem sair: muda um valor, salva, vê mudar.
+  Palavra da cliente e prova na tela, coladas.
+*/}
+<section id="painel" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">02</span>O painel, agora</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">Parece simples? Mexe aí e confere.</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:58ch;margin:0 0 10px;text-wrap:pretty">Todo mundo pensa a mesma coisa: "parece fácil, mas na hora eu vou travar". Então em vez de explicar, é melhor você mexer. Este é o painel, de verdade. Mude o nome do pacote ou o valor e salve.</p>
+    <p class="dica-seta" style="font-size:13.5px;font-weight:500;color:var(--gold);margin:0 0 36px">↓ muda o valor aqui embaixo e vê o site mudar ao lado</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,40px);align-items:start">
+
+      <!-- lado esquerdo: o painel -->
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:clamp(20px,2.6vw,30px)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px">
+          <span style="font-size:14.5px;font-weight:500;letter-spacing:-.01em">Seu estúdio · <span style="color:var(--gold)">admin</span></span>
+          <span style="font-size:12.5px;color:var(--muted)">painel privado</span>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--line);border-radius:3px;padding:clamp(18px,2.2vw,24px)">
+          <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 4px">Pacotes</p>
+          <p style="font-size:14px;color:var(--ink-soft);margin:0 0 20px;line-height:1.6">Edite e salve. O site atualiza na hora, sem depender de ninguém.</p>
+
+          <label for="dm-nome" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Nome do pacote</label>
+          <input id="dm-nome" value={nome} style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold);margin-bottom:16px" />
+
+          <label for="dm-valor" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Valor (R$)</label>
+          <input id="dm-valor" value={valor} inputmode="numeric" style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold)" />
+
+          <p style="font-size:13px;color:var(--muted);margin:8px 0 18px">Aperte Enter ou clique em salvar.</p>
+
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <button id="dm-salvar" class="btn-dark" type="button" style="border:0;border-radius:2px;font-family:inherit;font-size:14.5px;font-weight:500;padding:13px 24px;cursor:pointer;min-height:44px">Salvar alterações</button>
+            <span id="dm-publicado" style="font-size:13.5px;font-weight:500;color:var(--gold);display:none">publicado no seu site</span>
+          </div>
+        </div>
+
+        <p style="font-size:14px;color:var(--ink-soft);margin:18px 0 0;line-height:1.65">No painel de verdade você também troca fotos, textos e os ensaios da página inicial. Tudo assim, do mesmo jeito.</p>
+      </div>
+
+      <!-- lado direito: o que a cliente dela vê -->
+      <div>
+        <div style="background:var(--bg);display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-bottom:0;border-radius:3px 3px 0 0">
+          <span style="display:flex;gap:5px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i></span>
+          <span style="flex:1;background:#fff;border:1px solid var(--line);border-radius:2px;font-size:12px;color:var(--ink-soft);padding:5px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">seuestudio.com.br/gestante</span>
+        </div>
+
+        <div style="background:var(--ink);color:#fff;padding:clamp(24px,3.4vw,38px) clamp(20px,2.8vw,32px);border:1px solid var(--ink);border-top:0;border-radius:0 0 3px 3px;position:relative;overflow:hidden">
+          <span id="site-salvando" class="pulsa" style="position:absolute;top:14px;right:16px;font-size:12px;color:var(--gold-light);display:none">salvando…</span>
+
+          <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 10px">ensaio gestante</p>
+          <h3 style="font-weight:300;font-size:clamp(23px,2.6vw,31px);letter-spacing:-.025em;margin:0 0 22px;line-height:1.18">A doce espera, do seu jeito.</h3>
+
+          <div style="display:flex;gap:8px;margin-bottom:24px">
+            <img src="/assets/ph-p-04.svg" alt="" style="flex:1;min-width:0;height:92px;object-fit:cover;opacity:.92;border-radius:2px" />
+            <img src="/assets/ph-p-05.svg" alt="" style="flex:1;min-width:0;height:92px;object-fit:cover;opacity:.92;border-radius:2px" />
+          </div>
+
+          <div id="site-card" style="border:1px solid rgba(255,255,255,.22);border-radius:2px;background:transparent;padding:20px 22px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;transition:border-color .5s, background .5s, transform .5s">
+            <div>
+              <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 6px">pacote</p>
+              <p id="site-nome" style="font-size:clamp(17px,4.2vw,21px);font-weight:500;letter-spacing:-.02em;overflow-wrap:anywhere;margin:0">{nome}</p>
+            </div>
+            <p id="site-valor" style="font-size:clamp(23px,5.4vw,30px);font-weight:300;letter-spacing:-.03em;margin:0;color:#fff;transition:color .5s">R$ {valor}</p>
+          </div>
+
+          <p id="site-publicado" style="font-size:13px;color:var(--gold-light);margin:14px 0 0;text-align:center;display:none">pronto, já está no ar para as suas clientes</p>
+
+          <div style="text-align:center;margin-top:22px"><span style="display:inline-block;border-bottom:1px solid var(--gold);font-size:13.5px;padding-bottom:5px">Reservar pelo WhatsApp</span></div>
+        </div>
+
+        {/* Região viva: quem usa leitor de tela recebe o aviso de publicado
+            sem precisar sair do formulário para procurar o que mudou. */}
+        <p id="dm-aviso" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap"></p>
+      </div>
+    </div>
+
+    <!-- o painel inteiro, embutido: para quem quiser abrir as gavetas -->
+    <div style="margin-top:clamp(40px,5vw,64px)">
+      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);margin:0 0 18px;max-width:58ch;text-wrap:pretty">Aquele ali é um pedaço. Este é o painel inteiro, do jeito que você recebe: propostas, fotos, textos e datas especiais, cada um na sua aba.</p>
+      <div style="background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 18px 44px rgba(46,37,33,.08)">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0e3da">
+          <span style="display:flex;gap:6px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i></span>
+          <span style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">estudionome.com.br/admin</span>
+        </div>
+        <iframe
+          class="janela-frame"
+          src={painel.embedUrl}
+          title="Painel de administração, versão de demonstração"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin"
+          referrerpolicy="no-referrer"
+          style="display:block;width:100%;height:clamp(440px,70vh,680px);border:0;background:var(--bg)"
+        ></iframe>
+      </div>
+      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">Role dentro da janela. Nada do que você mexer aqui sai daqui.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .janela-frame { scrollbar-width: none; -ms-overflow-style: none; }
+  .janela-frame::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  /* Chamada discreta para o campo editável: é o único ponto da página em
+     que se espera uma ação que não é clicar num link. Desligada por
+     prefers-reduced-motion na regra global do layout. */
+  @keyframes pulsa { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+  .pulsa { animation: pulsa 1s ease infinite; }
+  .dica-seta { animation: pulsa 2.4s ease infinite; }
+
+  /* Os dois campos sao 16px no estilo de cada um, nao aqui: abaixo disso o
+     iOS da zoom sozinho ao focar e desalinha a pagina inteira justo no
+     momento em que a pessoa esta testando. Isto valia um media query de
+     600px ate se notar que o iPad em retrato tem 768px e tambem faz. */
+</style>
+
+<script>
+  // Empacotado pelo Astro num arquivo próprio (nada de script inline), para
+  // a página rodar sob Content-Security-Policy com script-src 'self'.
+
+  /** Busca por id e falha alto se o elemento sumiu do HTML. */
+  function pega<T extends HTMLElement>(id: string): T {
+    const el = document.getElementById(id);
+    if (!el) throw new Error(`Elemento #${id} não encontrado`);
+    return el as T;
+  }
+
+  const nomeI = pega<HTMLInputElement>("dm-nome");
+  const valorI = pega<HTMLInputElement>("dm-valor");
+  const btn = pega<HTMLButtonElement>("dm-salvar");
+  const siteNome = pega("site-nome");
+  const siteValor = pega("site-valor");
+  const card = pega("site-card");
+  const salvando = pega("site-salvando");
+  const publicado = pega("site-publicado");
+  const dmPub = pega("dm-publicado");
+  const aviso = pega("dm-aviso");
+
+  let tSalvar: ReturnType<typeof setTimeout> | undefined;
+  let tRealce: ReturnType<typeof setTimeout> | undefined;
+  let ocupado = false;
+
+  function salvar() {
+    if (ocupado) return;
+    ocupado = true;
+    btn.textContent = "salvando…";
+    salvando.style.display = "inline";
+    publicado.style.display = "none";
+    dmPub.style.display = "none";
+    clearTimeout(tSalvar);
+    clearTimeout(tRealce);
+
+    // A espera é de propósito: sem ela a mudança é instantânea demais para
+    // o olho registrar que algo aconteceu do outro lado.
+    tSalvar = setTimeout(function () {
+      ocupado = false;
+      btn.textContent = "Salvar alterações";
+      salvando.style.display = "none";
+
+      // textContent, nunca innerHTML: o que a pessoa digita entra como
+      // texto, não como marcação.
+      const nome = nomeI.value.trim() || "Seu pacote";
+      const valor = (valorI.value || "0").replace(/[^\d.,]/g, "") || "0";
+      siteNome.textContent = nome;
+      siteValor.textContent = "R$ " + valor;
+
+      publicado.style.display = "block";
+      dmPub.style.display = "inline";
+      aviso.textContent = `Publicado: ${nome}, R$ ${valor}.`;
+
+      card.style.borderColor = "#c9b48d";
+      card.style.background = "rgba(138,111,74,.28)";
+      card.style.transform = "scale(1.025)";
+      siteValor.style.color = "#e8cf9e";
+
+      tRealce = setTimeout(function () {
+        card.style.borderColor = "rgba(255,255,255,.22)";
+        card.style.background = "transparent";
+        card.style.transform = "scale(1)";
+        siteValor.style.color = "#fff";
+      }, 1600);
+    }, 750);
+  }
+
+  btn.addEventListener("click", salvar);
+
+  const aoTeclar = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      salvar();
+    }
+  };
+  nomeI.addEventListener("keydown", aoTeclar);
+  valorI.addEventListener("keydown", aoTeclar);
+</script>

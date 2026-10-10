@@ -1,0 +1,36 @@
+---
+import { steps } from "@/config/site";
+---
+<section id="como-funciona" style="scroll-margin-top:clamp(16px,3vw,34px);background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">04</span>Como funciona</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:18ch">Do primeiro oi à página no ar.</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:56ch;margin:0 0 28px;text-wrap:pretty">O seu único trabalho é separar o material. O resto é comigo.</p>
+
+    <div style="background:var(--ink);color:#fff;border-radius:3px;padding:clamp(24px,3.4vw,36px);margin:0 0 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(18px,3vw,40px);align-items:center">
+      <p style="font-size:clamp(21px,2.6vw,29px);font-weight:300;letter-spacing:-.025em;line-height:1.2;margin:0;text-wrap:balance">Você só fecha depois de ver a <em style="font-style:italic;color:#e0c49b">sua página</em> pronta.</p>
+      <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.78);margin:0;text-wrap:pretty">A primeira versão sai antes de qualquer pagamento. Você abre o link, vê as suas fotos e as suas propostas na página, e só então decide. Se não gostar, a gente para por aqui sem custo.</p>
+    </div>
+
+    <div style="display:flex;flex-direction:column">
+      {steps.map((s, i) => (
+        <div style={"border-top:1px solid var(--line);padding:26px 0" + (i === steps.length - 1 ? ";border-bottom:1px solid var(--line)" : "")}>
+          <div style="display:flex;gap:clamp(16px,3vw,40px);flex-wrap:wrap">
+            <span style="font-size:15px;font-weight:500;color:var(--gold);flex:none;width:34px;padding-top:3px">{s.n}</span>
+            <div style="flex:1;min-width:230px">
+              <p style="font-size:clamp(19px,2vw,23px);font-weight:500;letter-spacing:-.02em;margin:0 0 8px">{s.title}</p>
+              <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);margin:0;max-width:58ch;text-wrap:pretty">{s.body}</p>
+              {s.note && (
+                <div style="background:var(--bg);border:1px solid var(--line);border-left:2px solid var(--gold);padding:16px 20px;max-width:58ch;margin-top:16px">
+                  <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 8px">{s.note.title}</p>
+                  <p style="font-size:14.5px;line-height:1.7;color:var(--ink-soft);margin:0;text-wrap:pretty">{s.note.body}</p>
+                </div>
+              )}
+            </div>
+            <span style="font-size:13.5px;color:var(--muted);flex:none;align-self:flex-start;padding-top:5px">{s.aside}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

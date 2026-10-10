@@ -1,0 +1,76 @@
+---
+import { brand, tagline, wa, defaultWaMessage, hero } from "@/config/site";
+
+const { eyebrow, stats, promessa } = hero;
+---
+<header style="padding:clamp(22px,3vw,34px) clamp(22px,6vw,100px) clamp(56px,8vw,104px);max-width:1180px;margin:0 auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:clamp(52px,8vw,96px);flex-wrap:wrap">
+    <span style="font-size:15px;font-weight:500;letter-spacing:-.01em">{brand}</span>
+    <span style="font-size:13px;color:var(--muted)">{tagline}</span>
+  </div>
+
+  {/* Duas colunas: a promessa à esquerda, a objeção respondida à direita.
+      O min(330px,100%) e a parte que importa: sem o min(), a coluna nunca
+      encolhe abaixo de 330px e a pagina passa a rolar na horizontal em
+      tela de 280px. Com ele, as duas empilham antes de ficarem estreitas
+      demais para o titulo, em vez de espremerem a tipografia. */}
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:clamp(34px,5vw,64px);align-items:center">
+
+    <div>
+      <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 20px;letter-spacing:.02em">{eyebrow}</p>
+
+      <h1 style="font-weight:300;font-size:clamp(34px,4.6vw,56px);line-height:1.08;letter-spacing:-.035em;margin:0;max-width:15ch;text-wrap:balance">Página própria e propostas com <em style="font-style:italic;color:var(--gold)">link no seu nome</em>.</h1>
+
+      <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.7;color:var(--ink-soft);max-width:46ch;margin:24px 0 0;text-wrap:pretty">Nada de PDF pesado nem plataforma de terceiro com propaganda em cima do seu trabalho. Pagamento único, domínio no seu nome e uma página que só tem a sua cara.</p>
+
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:32px">
+        <a class="btn-dark" href={wa(defaultWaMessage)} target="_blank" rel="noopener" style="display:inline-block;font-size:15px;font-weight:500;padding:15px 28px;border-radius:2px;min-height:44px">Falar no WhatsApp</a>
+
+      </div>
+    </div>
+
+    {/* O cartão da promessa. O branco translúcido sobre o papel creme dá o
+        leve descolamento do fundo sem virar uma caixa branca dura, e a
+        sombra larga e fraca é a mesma linguagem das janelas das seções
+        02 e 03 — é o que faz a página parecer feita, não montada. */}
+    <aside style="background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:4px;padding:clamp(26px,3.2vw,38px);box-shadow:0 20px 48px rgba(46,37,33,.07)">
+      <p style="font-size:clamp(19px,2vw,24px);font-weight:300;letter-spacing:-.025em;line-height:1.3;margin:0;text-wrap:balance">{promessa.tituloInicio} <em style="font-style:italic;color:var(--gold)">{promessa.tituloEnfase}</em> {promessa.tituloFim}</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:clamp(18px,2.4vw,30px);margin-top:clamp(22px,2.6vw,30px);padding-top:clamp(20px,2.4vw,26px);border-top:1px solid var(--line)">
+        {promessa.colunas.map((col) => (
+          <div>
+            <p style={"font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.14em;margin:0 0 10px;" + (col.riscado ? "color:var(--muted)" : "color:var(--gold)")}>{col.rotulo}</p>
+            {col.riscado ? (
+              /* O risco é o argumento: mostra o caminho de todo mundo sendo
+                 descartado, em vez de só afirmar que o nosso é melhor.
+                 text-decoration-color mais clara que o texto para o risco
+                 não competir com a leitura. */
+              <p style="font-size:14.5px;line-height:1.55;margin:0;color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(138,125,116,.55);text-decoration-thickness:1px">{col.texto}</p>
+            ) : (
+              <p style="font-size:14.5px;line-height:1.55;margin:0;color:var(--ink-soft)">{col.texto} <strong style="font-weight:500;color:var(--ink)">{col.enfase}</strong></p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Ancora pura, sem JavaScript: o scroll-behavior:smooth do html em
+          Base.astro ja da a rolagem suave, e o bloco de
+          prefers-reduced-motion a desliga para quem pediu.
+
+          Mora aqui dentro de proposito: o cartao afirma que voce ve a
+          pagina antes de pagar, e este botao e o caminho para conferir a
+          afirmacao. Fora do cartao era so mais um botao; dentro, e a
+          continuacao da frase. */}
+      <a class="btn-gold" href="#como-funciona" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:clamp(20px,2.4vw,26px);font-size:15px;font-weight:500;padding:15px 24px;border-radius:2px;min-height:44px">Ver como funciona <svg class="seta" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5v15" /><path d="M18.5 13 12 19.5 5.5 13" /></svg></a>
+    </aside>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:clamp(18px,3vw,40px);margin-top:clamp(52px,7vw,84px);border-top:1px solid var(--line);padding-top:26px">
+    {stats.map((s) => (
+      <div>
+        <p style="font-size:clamp(26px,3vw,34px);font-weight:300;letter-spacing:-.03em;margin:0 0 4px">{s.value}</p>
+        <p style="font-size:14px;color:var(--muted);margin:0;line-height:1.5">{s.label}</p>
+      </div>
+    ))}
+  </div>
+</header>

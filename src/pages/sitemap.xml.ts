@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
-import { canonical } from "../config";
+import { canonical } from "@/config/site";
 
 // Site de uma página só: não vale puxar uma dependência de sitemap para isto.
-// Enquanto SITE não estiver preenchido em src/config.ts, o sitemap sai vazio
+// Enquanto SITE não estiver preenchido em src/config/site.ts, o sitemap sai vazio
 // (um sitemap com URL errada é pior do que nenhum).
 export const GET: APIRoute = () => {
   const urls = canonical

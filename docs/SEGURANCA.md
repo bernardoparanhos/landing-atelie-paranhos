@@ -52,7 +52,7 @@ upgrade-insecure-requests
   elemento. Estilo inline não executa código. É o único ponto folgado da lista,
   e é aceito conscientemente.
 - **`frame-ancestors 'self'`** — ninguém de fora embute esta página. O `'self'`
-  (em vez de `'none'`) é obrigatório porque a própria seção 05 embute `/demos/`.
+  (em vez de `'none'`) é obrigatório porque as seções 02 e 03 embutem `/demos/`.
 - **`base-uri 'none'`** — impede que um `<base>` injetado desvie todos os
   caminhos relativos da página para outro servidor.
 - **`form-action 'none'`** — não há formulário nenhum; se aparecer um injetado,
@@ -102,7 +102,7 @@ fixos no código), mas o padrão é uma armadilha para quem mexer depois.
 
 ---
 
-## O iframe da seção 05
+## O iframe das seções 02 e 03
 
 ```html
 sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"
@@ -174,7 +174,8 @@ Depois de publicar, rode o domínio em <https://securityheaders.com> — a nota
 esperada é **A**. Se vier abaixo disso, a hospedagem não está aplicando o
 `_headers` / `vercel.json`; ver [DEPLOY.md](DEPLOY.md).
 
-Teste manual de XSS, para confiar no que está escrito acima: na seção 02, cole
+Teste manual de XSS, para confiar no que está escrito acima: no mini-painel da
+seção 02, cole
 no campo "Nome do pacote"
 
 ```
@@ -194,7 +195,7 @@ Isto aqui protege o código. O resto do risco é operacional e está com você:
   o que quiser no seu domínio. Ative verificação em duas etapas nas duas.
 - **Registro do domínio.** Ative o bloqueio de transferência e a verificação em
   duas etapas no registrador.
-- **O número de WhatsApp em `src/config.ts`** é público por natureza — é o
+- **O número de WhatsApp em `src/config/site.ts`** é público por natureza — é o
   objetivo da página. Só confira se é o número certo antes de publicar.
 - **Conteúdo de terceiros que você venha a colar** (script de chat, pixel de
   anúncio). Cada um desses é uma porta nova; leia a seção
