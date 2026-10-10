@@ -37,7 +37,8 @@ public/                 ← copiado cru para dist/, sem processamento
   fonts/                ← Outfit (a landing) + Cormorant Garamond e Jost
                            (as demos), todas auto-hospedadas
   assets/               ← os dois SVG de exemplo usados dentro da seção 02
-  demos/                ← as duas demonstrações embutidas (site e painel)
+  demos/                ← as demonstracoes embutidas: site, propostas,
+                           painel
 vercel.json             ← os mesmos cabeçalhos, formato Vercel
 astro.config.mjs
 ```
@@ -51,7 +52,7 @@ Uma seção por componente, na ordem em que `index.astro` as empilha.
 | — | Hero | Promessa principal, o cartão que responde "e se eu não gostar?" e três números |
 | 01 | Exemplos no ar | Dois sites de cliente reais, com print, link e depoimento |
 | 02 | O painel, agora | Mini-painel editável na própria página + o painel inteiro em `<iframe>` |
-| 03 | Nosso template | O template base em `<iframe>` + link para navegá-lo inteiro |
+| 03 | Nosso template | Duas abas (o site e as propostas) numa `<iframe>` + link para navegá-lo inteiro |
 | 04 | Como funciona | Os seis passos, do primeiro oi à página no ar |
 | 05 | Os três formatos | Preços, o que cada um inclui, e a faixa do domínio |
 | 06 | O que vem junto | Os quatro itens que valem para os três formatos |
@@ -106,8 +107,9 @@ isso; só um teste no build (`npm run preview`) pega.
 ### As demos vivem em `public/`, não em `src/`
 
 Elas são páginas independentes, com CSS e JS próprios, que existem para ser
-mostradas dentro de um `<iframe>`. São duas: `/demos/site/` (o template, na
-seção 03) e `/demos/painel.html` (o painel, na seção 02). Passá-las pelo Astro traria acoplamento sem
+mostradas dentro de um `<iframe>`. São três: `/demos/site/` e `/demos/propostas.html`
+(as duas abas do template, na seção 03) e `/demos/painel.html` (o painel,
+na seção 02). Passá-las pelo Astro traria acoplamento sem
 benefício. Em troca, elas não ganham otimização automática — por isso usam
 apenas SVG leve como imagem de exemplo.
 
@@ -170,6 +172,12 @@ dentro de uma moldura de navegador desenhada em CSS (os três pontinhos e a
 barra de endereço falsa).
 
 Duas coisas que não são óbvias:
+
+**As abas da seção 03 são um `role="tablist"` de verdade.** Clicar, ou usar
+as setas do teclado, troca o `src` do iframe e a barra de endereço falsa, e
+move `aria-selected` e o `tabindex`. O `src` só é reatribuído quando muda:
+reescrever o mesmo endereço recarregaria o iframe e jogaria fora a rolagem
+de quem já estava navegando dentro dele.
 
 **O `src` precisa ser local.** A CSP traz `frame-src 'self'`. Apontar a janela
 para um domínio de fora — o template publicado no GitHub Pages, por exemplo —

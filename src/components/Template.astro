@@ -7,6 +7,9 @@ const amarra =
   nomes.length >= 2
     ? `Você acabou de ver: ${nomes[0]} e ${nomes[1]} saíram desta mesma base e não parecem a mesma coisa.`
     : "A base é a mesma; o que entra nela é que faz a diferença.";
+
+const abas = template.abas;
+const inicial = abas[0];
 ---
 <section id="template" style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
   <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">03</span>Nosso template</p>
@@ -26,10 +29,30 @@ const amarra =
     </div>
 
     <div>
+      {/* Abas de verdade (role=tablist): além do clique, ← e → trocam de
+          aba, que é o que um leitor de tela e um teclado esperam de algo
+          desenhado como aba. */}
+      <div role="tablist" aria-label="O que mostrar na janela" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        {abas.map((aba, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`aba-${aba.id}`}
+            class="aba"
+            data-src={aba.src}
+            data-url={aba.url}
+            aria-controls="janela-frame"
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+            style="font-family:inherit;font-size:14.5px;font-weight:500;padding:11px 20px;border-radius:2px;cursor:pointer;min-height:44px"
+          >{aba.rotulo}</button>
+        ))}
+      </div>
+
       <div style="background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 18px 44px rgba(46,37,33,.08)">
         <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0e3da">
           <span style="display:flex;gap:6px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i></span>
-          <span style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">estudionome.com.br</span>
+          <span id="janela-url" style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{inicial.url}</span>
         </div>
 
         {/* A janela carrega o template de verdade, do próprio domínio.
@@ -37,8 +60,9 @@ const amarra =
             e é este render que parece um site pronto — um placeholder numa
             seção que afirma "pronto e testado" diz o contrário do texto. */}
         <iframe
+          id="janela-frame"
           class="janela-frame"
-          src={template.embedUrl}
+          src={inicial.src}
           title="Template base, versão de demonstração"
           loading="lazy"
           sandbox="allow-scripts allow-same-origin"
@@ -58,8 +82,67 @@ const amarra =
 </section>
 
 <style>
-  /* A janela já tem a moldura do navegador desenhada em volta: uma barra de
-     rolagem do iframe por cima dela estraga a ilusão de site pronto. */
+  /* A janela já tem a moldura do navegador desenhada em volta: uma barra
+     de rolagem do iframe por cima dela estraga a ilusão de site pronto. */
   .janela-frame { scrollbar-width: none; -ms-overflow-style: none; }
   .janela-frame::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  .aba {
+    background: #fff;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    transition: background .25s, color .25s, border-color .25s;
+  }
+  .aba:hover { border-color: var(--gold); color: var(--ink); }
+  .aba[aria-selected="true"] {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
 </style>
+
+<script>
+  // Empacotado pelo Astro num arquivo próprio (nada de script inline), para
+  // a página rodar sob Content-Security-Policy com script-src 'self'.
+
+  const tablist = document.querySelector<HTMLElement>('[role="tablist"]');
+  const frame = document.getElementById("janela-frame") as HTMLIFrameElement | null;
+  const urlEl = document.getElementById("janela-url");
+
+  if (tablist && frame && urlEl) {
+    const abas = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+
+    function selecionar(alvo: HTMLButtonElement, focar: boolean) {
+      const src = alvo.getAttribute("data-src");
+      const url = alvo.getAttribute("data-url");
+      if (!src || !frame || !urlEl) return;
+
+      // Só troca o src se mudou: reatribuir o mesmo endereço recarregaria
+      // o iframe e jogaria fora a rolagem de quem já estava navegando nele.
+      if (frame.getAttribute("src") !== src) frame.setAttribute("src", src);
+      urlEl.textContent = url;
+
+      for (const a of abas) {
+        const ativa = a === alvo;
+        a.setAttribute("aria-selected", ativa ? "true" : "false");
+        a.tabIndex = ativa ? 0 : -1;
+      }
+      if (focar) alvo.focus();
+    }
+
+    for (const aba of abas) {
+      aba.addEventListener("click", () => selecionar(aba, false));
+    }
+
+    // ← e → andam entre as abas e dão a volta nas pontas, que é o
+    // comportamento que o padrão de tablist define.
+    tablist.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const atual = abas.findIndex((a) => a.getAttribute("aria-selected") === "true");
+      if (atual < 0) return;
+      e.preventDefault();
+      const passo = e.key === "ArrowRight" ? 1 : -1;
+      selecionar(abas[(atual + passo + abas.length) % abas.length], true);
+    });
+  }
+</script>

@@ -60,6 +60,7 @@ Nenhuma seção tem texto cravado dentro dela: todas leem daqui.
 | Quero mudar | Edito |
 |---|---|
 | A linha e o cartão do topo | `hero` → `eyebrow`, `stats[]`, `promessa` |
+| As abas da janela da seção 03 | `template.abas[]` |
 | Preço de um formato | `formats[]` → o campo `price` |
 | O que um formato inclui | `formats[]` → `features[]` |
 | Adicionar um cliente novo | empurrar um objeto em `clients[]` + os dois prints em `src/assets/` |
@@ -102,7 +103,8 @@ componente: acerte-os também.
 | `<head>`, CSP, favicon, paleta, fontes | [`src/layouts/Base.astro`](src/layouts/Base.astro) |
 | Página de erro | [`src/pages/404.astro`](src/pages/404.astro) |
 | Prints dos clientes | [`src/assets/`](src/assets/) — o Astro redimensiona e converte sozinho |
-| Demonstração: o template | [`public/demos/site/`](public/demos/site/) |
+| Demonstração: o template, aba "o site" | [`public/demos/site/`](public/demos/site/) |
+| Demonstração: o template, aba "as propostas" | [`public/demos/propostas.html`](public/demos/propostas.html) |
 | Demonstração: o painel | [`public/demos/painel.html`](public/demos/painel.html) + [`painel.js`](public/demos/painel.js) |
 | Fontes | [`public/fonts/`](public/fonts/) — auto-hospedadas |
 | Cabeçalhos de segurança | [`public/_headers`](public/_headers) e [`vercel.json`](vercel.json) |

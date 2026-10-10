@@ -175,11 +175,26 @@ export const template = {
    */
   liveUrl: "https://paranhos-dev.github.io/template-fot-grafos/",
   /**
-   * O que a janela desta página embute. Precisa ser local: a CSP tem
-   * frame-src 'self' e bloquearia um domínio de fora. Também é o render
-   * que de fato parece um site pronto, em vez de placeholder.
+   * As abas da janela desta página. O src precisa ser local: a CSP tem
+   * frame-src 'self' e bloquearia um domínio de fora. São também os
+   * renders que de fato parecem um site pronto, em vez de placeholder.
+   *
+   * A primeira da lista é a que abre.
    */
-  embedUrl: "/demos/site/index.html",
+  abas: [
+    {
+      id: "site",
+      rotulo: "O site",
+      src: "/demos/site/index.html",
+      url: "estudionome.com.br",
+    },
+    {
+      id: "propostas",
+      rotulo: "As propostas",
+      src: "/demos/propostas.html",
+      url: "estudionome.com.br/propostas",
+    },
+  ],
   pages: ["início", "sobre mim", "ensaios", "galeria", "propostas", "contato"],
   highlight: "propostas",
 };
