@@ -42,7 +42,10 @@ const br = {
   /** WhatsApp desta versão: DDI + DDD + número, só dígitos.
       É o mesmo nas duas versões — WhatsApp Business, atende Brasil e
       Portugal. Fica por versão mesmo assim: no dia em que houver um
-      número português, muda uma linha e só a /pt/ sente. */
+      número português, muda uma linha e só a /pt/ sente.
+
+      Os 8 dígitos depois do 45 estão certos e o link foi testado. É
+      WhatsApp Business, não celular: NÃO acrescente o 9 na frente. */
   whatsapp: "554588121303",
 
   // --- cabeça da página -------------------------------------
