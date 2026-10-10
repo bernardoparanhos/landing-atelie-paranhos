@@ -135,21 +135,27 @@ const csp = [
   .row-link { transition: background .25s; }
   .row-link:hover { background: rgba(255,255,255,.12); }
 
-  /* Botao secundario: contorno dourado com um fundo de leve tingimento,
-     para ler como botao e nao como link, sem disputar com o .btn-dark ao
-     lado. O especificador .btn-ghost:hover vence o a:hover global. */
-  .btn-ghost {
-    background: rgba(138,111,74,.07);
-    color: var(--ink);
-    border: 1px solid var(--gold);
-    transition: background .25s, color .25s;
+  /* Dourado chapado. Mora dentro do cartao do topo, sobre fundo claro, e
+     por isso pode ser cheio sem brigar com o .btn-dark do WhatsApp: os
+     dois ficam em blocos diferentes e cada um e o caminho obvio do seu.
+     O especificador .btn-gold:hover vence o a:hover global. */
+  .btn-gold {
+    background: var(--gold);
+    color: #fff;
+    transition: background .25s, box-shadow .25s, transform .25s;
+    box-shadow: 0 6px 18px rgba(138,111,74,.26);
   }
-  .btn-ghost:hover { background: var(--gold); color: #fff; }
+  .btn-gold:hover {
+    background: var(--ink);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(46,37,33,.22);
+    transform: translateY(-1px);
+  }
   /* A seta desce um fio no hover: diz, sem texto, que o clique leva para
      baixo na propria pagina em vez de abrir outra coisa. O bloco de
-     prefers-reduced-motion mais abaixo zera esta transicao. */
-  .btn-ghost .seta { display: inline-block; transition: transform .25s; }
-  .btn-ghost:hover .seta { transform: translateY(3px); }
+     prefers-reduced-motion mais abaixo zera estas transicoes. */
+  .btn-gold .seta { display: inline-block; transition: transform .25s; }
+  .btn-gold:hover .seta { transform: translateY(3px); }
 
   /* ===================== TRAVAS DE LARGURA =====================
      A regra da casa: em nenhuma largura, de 280px a 2560px, pode haver
