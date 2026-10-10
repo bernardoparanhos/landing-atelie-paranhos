@@ -17,20 +17,26 @@ projeto existe para **não** perder essa propriedade.
 ```
 src/
   config/
-    site.ts             ← TODO o conteúdo: marca, clientes, formatos, passos,
-                           preços, mensagens de WhatsApp, endereço do site
+    i18n.ts             ← TODO o texto, em dois dicionários: `br` e `pt`.
+                           `const pt: typeof br` trava os dois: chave que
+                           falta de um lado quebra o build.
+    site.ts             ← o que NÃO muda de versão: marca, imagens,
+                           endereços dos clientes, endereço do site
   assets/               ← imagens que passam pelo otimizador do Astro
   layouts/
-    Base.astro          ← <head>, CSP, favicon, paleta em :root, fontes,
-                           acessibilidade. Toda página passa por aqui.
-  components/           ← uma seção por arquivo, todas lendo de config/site.ts
+    Base.astro          ← <head>, CSP, hreflang, favicon, paleta em :root,
+                           fontes, acessibilidade. Toda página passa aqui.
+    Landing.astro       ← a ordem das seções; recebe o idioma por prop
+  components/           ← uma seção por arquivo, todas recebendo `lang` e
+                           lendo de config/i18n.ts
     Hero / Exemplos / Painel / Template / ComoFunciona /
     Formatos / Incluso / CTA / Footer
   pages/
-    index.astro         ← 25 linhas: só a ordem das seções
+    index.astro         ← <Landing lang="br" />   → /
+    pt/index.astro      ← <Landing lang="pt" />   → /pt/
     404.astro           ← página de erro, sobre o mesmo Base
     robots.txt.ts       ← gerado no build a partir de config/site.ts
-    sitemap.xml.ts      ← idem
+    sitemap.xml.ts      ← idem, com as duas URLs e o hreflang de cada uma
 public/                 ← copiado cru para dist/, sem processamento
   _headers              ← cabeçalhos de segurança (Netlify / Cloudflare Pages)
   favicon.svg, favicon-32.png, apple-touch-icon.png
@@ -39,6 +45,8 @@ public/                 ← copiado cru para dist/, sem processamento
   assets/               ← os dois SVG de exemplo usados dentro da seção 02
   demos/                ← as demonstracoes embutidas: site, propostas,
                            painel
+  demos/pt/             ← as mesmas em português de Portugal, GERADAS por
+                           scripts/traduzir-demos.mjs
 vercel.json             ← os mesmos cabeçalhos, formato Vercel
 astro.config.mjs
 ```

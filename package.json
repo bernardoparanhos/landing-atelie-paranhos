@@ -11,10 +11,12 @@
     "dev": "astro dev",
     "dev:rede": "astro dev --host",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/checar-idiomas.mjs",
     "preview": "astro preview",
     "check": "astro check",
-    "verificar": "npm run check && npm run build && npm audit --audit-level=high"
+    "verificar": "npm run check && npm run build && npm audit --audit-level=high",
+    "demos:pt": "node scripts/traduzir-demos.mjs",
+    "idiomas": "node scripts/checar-idiomas.mjs"
   },
   "dependencies": {
     "astro": "^7.3.2"

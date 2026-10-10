@@ -29,12 +29,19 @@ const BASE = process.env.BASE || "http://localhost:4321";
 // 280 e menor que qualquer telefone em uso; 2560 e um monitor grande.
 const LARGURAS = [280, 320, 360, 390, 414, 540, 600, 700, 768, 820, 900, 1024, 1180, 1280, 1440, 1920, 2560];
 
+// As duas versoes da landing e as duas familias de demo: a portuguesa tem
+// texto mais longo em varios pontos ("Registas num registador portugues
+// com o teu NIF"), e e justamente onde um vazamento aparece primeiro.
 const PAGINAS = [
-  ["home", "/"],
+  ["home BR", "/"],
+  ["home PT", "/pt/"],
   ["404", "/404.html"],
   ["demo site", "/demos/site/index.html"],
   ["demo propostas", "/demos/propostas.html"],
   ["demo painel", "/demos/painel.html"],
+  ["demo site PT", "/demos/pt/site/index.html"],
+  ["demo propostas PT", "/demos/pt/propostas.html"],
+  ["demo painel PT", "/demos/pt/painel.html"],
 ];
 
 const navegador = await puppeteer.launch({

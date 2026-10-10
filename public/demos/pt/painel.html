@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel · O Teu Estúdio</title>
+<link rel="preload" href="/fonts/jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/cormorant-garamond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fontes.css">
+<style>
+:root{--tinta:#14110f;--papel:#e9e6e1;--ouro:#8a6f4a;--sec:#3b3630;--linha:#c9c3ba;--cred:#6d675f}
+*{box-sizing:border-box}
+html{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar{width:0;height:0;display:none}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:'Jost',system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+button{font-family:'Jost',sans-serif;cursor:pointer}
+/* topo */
+.topo{position:sticky;top:0;z-index:20;background:var(--papel);border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:34px;padding:16px 30px}
+.topo .marca{font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.16em;white-space:nowrap}
+.topo .marca i{font-style:normal;color:var(--ouro);font-size:14px}
+.tabs{display:flex;gap:26px}
+.tab{background:none;border:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cred);padding:4px 0}
+.tab.on{color:var(--tinta);border-bottom:1px solid var(--ouro)}
+.topo .dir{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--sec)}
+/* 24px e o minimo da WCAG 2.5.8; estes dois links ficavam com 15px. */
+.topo .dir a{display:inline-flex;align-items:center;min-height:24px}
+.topo .dir .mail{color:var(--ouro);text-transform:none;letter-spacing:.04em;font-size:11px}
+main{max-width:960px;margin:0 auto;padding:34px 24px 120px}
+h2{margin:0 0 8px;font-weight:300}
+h2 b{font-family:'Jost',sans-serif;font-weight:400;font-size:11px;letter-spacing:.24em;color:var(--ouro);margin-right:14px}
+h2 span{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:.14em;text-transform:uppercase}
+.ajuda{font-size:13px;color:var(--cred);margin:0 0 24px;line-height:1.6}
+label{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--cred);margin:0 0 6px}
+/* 16px, nao 14: abaixo disso o iOS da zoom sozinho ao focar o campo. */
+input[type=text],textarea{width:100%;border:1px solid var(--linha);background:#fdfcfa;font-family:'Jost',sans-serif;font-size:16px;letter-spacing:.04em;padding:11px 13px;color:var(--tinta);outline-color:var(--ouro)}
+textarea{min-height:120px;line-height:1.7;resize:vertical}
+.btn{display:inline-block;background:var(--tinta);color:#fff;border:0;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:12px 22px;margin-top:16px}
+.btn.mini{margin:0;padding:8px 14px}
+section.blk{border-bottom:1px solid var(--linha);padding:38px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.bloco-rotulo{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--cred);margin:26px 0 10px;display:flex;align-items:center;gap:12px}
+.bloco-rotulo::after{content:"";flex:1;height:1px;background:var(--linha)}
+.foto{background:#fff;border:1px solid rgba(0,0,0,.1);padding:6px}
+.foto img{width:100%;height:150px;object-fit:cover;display:block}
+.foto p{margin:8px 2px 2px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ouro)}
+.contagem{background:#fff;border:1px solid rgba(0,0,0,.1);padding:18px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.contagem input{width:64px;text-align:center}
+.contagem .dica{flex:1;font-size:12px;color:var(--cred);line-height:1.5;min-width:180px}
+.galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gfoto{background:#fff;border:1px solid rgba(0,0,0,.1)}
+.gfoto .faixa{background:var(--ouro);color:#fff;font-size:8px;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:4px}
+.gfoto img{width:100%;height:110px;object-fit:cover;display:block}
+.gfoto .acao{display:flex;justify-content:space-between;padding:7px 8px;font-size:8px;letter-spacing:.14em;text-transform:uppercase}
+.gfoto .acao b{font-weight:400;border:1px solid var(--linha);padding:3px 6px}
+.gfoto .acao span{color:var(--ouro)}
+/* propostas */
+.p-head h1{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:40px;letter-spacing:.12em;text-transform:uppercase;margin:8px 0 14px}
+.p-intro{font-size:14px;color:var(--sec);line-height:1.7;max-width:70ch;margin:0 0 30px}
+.status{background:#f4f2ee;border:1px solid var(--linha);padding:18px 22px;display:flex;align-items:center;gap:30px;flex-wrap:wrap}
+.status .item{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cred)}
+.status .item b{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--tinta);letter-spacing:.04em;margin-right:7px}
+.status .ver{margin-left:auto;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ouro)}
+.nota{background:#efece6;border:1px solid var(--linha);border-top:0;padding:16px 22px;font-size:12.5px;color:var(--cred);line-height:1.6}
+.lista{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+.linha{background:#fff;border:1px solid rgba(0,0,0,.1);display:grid;grid-template-columns:88px 1fr 190px;align-items:stretch}
+.linha .thumb{background:#e5e0d6;display:flex;align-items:center;justify-content:center}
+.linha .thumb img{width:100%;height:100%;object-fit:cover}
+.linha .thumb span{font-family:'Cormorant Garamond',serif;font-size:22px;color:#b6ae9f}
+.linha .info{padding:18px 22px;display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0}
+.linha .info h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:22px;margin:0;letter-spacing:.02em}
+.linha .info .meta{font-size:11px;color:var(--cred);letter-spacing:.04em}
+.linha .info .meta b{color:var(--ouro);font-weight:400}
+.linha .info .row{display:flex;align-items:center;gap:14px;margin-top:4px}
+.chip{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--ouro);color:var(--ouro);padding:5px 9px}
+.editar{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sec)}
+.linha .lado{border-left:1px solid var(--linha);padding:16px 18px;display:flex;flex-direction:column;gap:9px;align-items:flex-end;justify-content:center;text-align:right}
+.linha .lado .arrows{display:flex;gap:12px;color:var(--cred);font-size:13px}
+.linha .lado .lk{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--sec)}
+.linha .lado .tirar{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cred)}
+/* tour */
+.ajuda-btn{position:fixed;right:22px;bottom:22px;z-index:40;width:46px;height:46px;border-radius:50%;background:var(--ouro);color:#fff;border:0;font-size:19px;box-shadow:0 8px 24px rgba(20,17,15,.3)}
+.spot{position:fixed;z-index:50;border:2px solid var(--ouro);border-radius:4px;box-shadow:0 0 0 9999px rgba(20,17,15,.62);pointer-events:none;transition:all .3s ease}
+.tip{position:fixed;z-index:51;width:300px;max-width:calc(100vw - 32px);background:#fff;border-radius:6px;box-shadow:0 20px 50px rgba(20,17,15,.35);padding:20px 22px;transition:all .3s ease}
+.tip .g{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ouro);margin:0 0 8px}
+.tip h4{font-family:'Jost',sans-serif;font-weight:500;font-size:17px;margin:0 0 8px;color:var(--tinta)}
+.tip p{font-size:13px;line-height:1.6;color:var(--sec);margin:0 0 18px}
+.tip .btns{display:flex;align-items:center;gap:12px}
+.tip .pular{font-size:12px;color:var(--cred);text-decoration:underline;background:none;border:0;padding:0;margin-right:auto}
+.tip .ant{background:#fff;border:1px solid var(--linha);color:var(--sec);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 15px;border-radius:4px}
+.tip .prox{background:var(--ouro);color:#fff;border:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 17px;border-radius:4px}
+.tip .fechar{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:5px;background:#efece6;border:0;color:var(--cred);font-size:14px;line-height:1}
+.hide{display:none!important}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.galeria{grid-template-columns:repeat(2,1fr)}.topo{gap:18px;padding:14px 18px;flex-wrap:wrap}.topo .dir .mail{display:none}.linha{grid-template-columns:64px 1fr}.linha .lado{grid-column:1/-1;border-left:0;border-top:1px solid var(--linha);flex-direction:row;align-items:center;justify-content:space-between;text-align:left}}
+@media(max-width:560px){.grid-foto-campos{grid-template-columns:1fr !important}.galeria{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- ACESSIBILIDADE ---------- */
+:where(a,button,input,textarea,select,[tabindex]):focus-visible{outline:2px solid var(--ouro);outline-offset:3px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}}
+</style>
+</head>
+<body>
+<div class="topo">
+  <span class="marca" data-tour="marca">O TEU ESTÚDIO <i>· admin</i></span>
+  <div class="tabs">
+    <button class="tab on" type="button" id="tab-site" data-acao="ver" data-arg="site">Site</button>
+    <button class="tab" type="button" id="tab-prop" data-acao="ver" data-arg="prop">Propostas</button>
+  </div>
+  <div class="dir">
+    <a href="#" data-tour="versite">Ver site ↗</a>
+    <span class="mail">tu@oteuestudio.pt</span>
+    <a href="#">Sair</a>
+  </div>
+</div>
+
+<!-- VIEW SITE -->
+<main id="view-site">
+  <section class="blk" data-tour="nome">
+    <h2><b>00</b><span>Nome do estúdio</span></h2>
+    <p class="ajuda">Aparece no cabeçalho, no rodapé e no título das páginas. Usa letras maiúsculas se quiseres o estilo clássico.</p>
+    <div style="max-width:340px"><input type="text" value="O TEU ESTÚDIO"></div>
+    <button class="btn">Guardar nome</button>
+  </section>
+  <section class="blk" data-tour="hero">
+    <h2><b>01</b><span>Hero</span></h2>
+    <p class="ajuda">Os blocos que se alternam no topo do site a cada 5 segundos, cada um com duas imagens. Clica em qualquer uma para enviares outra foto.</p>
+    <div class="bloco-rotulo">Bloco 1</div>
+    <div class="grid2">
+      <div class="foto"><img src="assets/ph-hero-01.svg" alt=""><p>Imagem da esquerda</p></div>
+      <div class="foto"><img src="assets/ph-hero-02.svg" alt=""><p>Imagem da direita</p></div>
+    </div>
+    <div class="bloco-rotulo">Bloco 2</div>
+    <div class="grid2">
+      <div class="foto"><img src="assets/ph-hero-03.svg" alt=""><p>Imagem da esquerda</p></div>
+      <div class="foto"><img src="assets/ph-hero-04.svg" alt=""><p>Imagem da direita</p></div>
+    </div>
+  </section>
+  <section class="blk" data-tour="sobre">
+    <h2><b>02</b><span>Sobre mim</span></h2>
+    <p class="ajuda">O retrato, o título e o texto de apresentação.</p>
+    <div class="grid-foto-campos" style="display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:start">
+      <div class="foto"><img src="assets/ph-retrato.svg" alt="" style="height:170px"><p>Retrato</p></div>
+      <div>
+        <label>Título</label>
+        <input type="text" value="As fases passam depressa. As fotos ficam.">
+        <label style="margin-top:16px">Bio</label>
+        <textarea>Fotografo gravidez, recém-nascido, família e primeiro aniversário. Trabalho com luz natural, sem pressa, a deixar cada família à vontade.</textarea>
+        <button class="btn">Guardar textos</button>
+      </div>
+    </div>
+  </section>
+  <section class="blk" data-tour="sessões">
+    <h2><b>03</b><span>Sessões</span></h2>
+    <p class="ajuda">As sessões da home. Escolhes quantas aparecem e quais são.</p>
+    <div class="contagem">
+      <div><label>Quantos na home</label><input type="text" value="6"></div>
+      <p class="dica">Escreve um número maior para caberem mais sessões, ou menor para mostrar menos. De 1 a 12.</p>
+      <button class="btn mini">+ Nova sessão</button>
+    </div>
+    <div class="galeria">
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-02.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-04.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-06.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-07.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+    </div>
+  </section>
+  <section class="blk" data-tour="galeria">
+    <h2><b>04</b><span>Galeria</span></h2>
+    <p class="ajuda">As fotos da home. Cada foto fica marcada com uma faixa a mostrar onde está a ser usada.</p>
+    <div class="contagem">
+      <div><label>Quantas na home</label><input type="text" value="23"></div>
+      <p class="dica">19 na home · 13 só na página · 32 no total</p>
+      <button class="btn mini">+ Adicionar fotos</button>
+    </div>
+    <div class="galeria">
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-01.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-03.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-05.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-p-08.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-hero-05.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-hero-06.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-l-01.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+      <div class="gfoto"><div class="faixa">★ na home</div><img src="assets/ph-l-02.svg" alt=""><div class="acao"><b>na home</b><span>tirar</span></div></div>
+    </div>
+  </section>
+  <section class="blk" data-tour="cta">
+    <h2><b>05</b><span>CTA</span></h2>
+    <p class="ajuda">A faixa larga perto do rodapé. Troca o fundo e edita os textos que aparecem sobre a imagem.</p>
+    <div class="grid-foto-campos" style="display:grid;grid-template-columns:180px 1fr;gap:22px;align-items:start">
+      <div class="foto"><img src="assets/ph-l-03.svg" alt=""><p>Imagem de fundo</p></div>
+      <div>
+        <label>Título</label>
+        <input type="text" value="Delicado, real, para sempre.">
+        <label style="margin-top:16px">Texto do botão</label>
+        <input type="text" value="Marcar a minha sessão">
+        <button class="btn">Guardar textos</button>
+      </div>
+    </div>
+  </section>
+  <section class="blk" data-tour="rodape" style="border-bottom:0">
+    <h2><b>06</b><span>Rodapé</span></h2>
+    <p class="ajuda">A linha final do site, mais os links de Instagram e WhatsApp.</p>
+    <div class="grid2">
+      <div><label>Lado esquerdo</label><input type="text" value="© O TEU ESTÚDIO · 2026"></div>
+      <div><label>Lado direito</label><input type="text" value="Gravidez · Newborn · Família · Smash"></div>
+      <div><label>Link do Instagram</label><input type="text" value="https://www.instagram.com/oteuestudio/"></div>
+      <div><label>WhatsApp</label><input type="text" value="https://wa.me/5500000000000"></div>
+    </div>
+    <button class="btn">Guardar rodapé</button>
+  </section>
+</main>
+
+<!-- VIEW PROPOSTAS -->
+<main id="view-prop" class="hide">
+  <div class="p-head">
+    <h1>Propostas</h1>
+    <p class="p-intro" data-tour="p-intro">As tuas propostas, cada uma com um link próprio para enviares no WhatsApp. Clica numa para editares os textos, a capa, as fotos e os pacotes. O link de uma proposta nunca muda, por isso podes enviar sem receio.</p>
+  </div>
+  <div class="status" data-tour="p-status">
+    <span class="item"><b>12</b>no índice</span>
+    <span class="item"><b>12</b>com pacote</span>
+    <span class="item"><b>6</b>com foto</span>
+    <a class="ver" href="#">Ver a página ↗</a>
+  </div>
+  <div class="nota">Tirar do índice esconde a proposta da página /propostas, mas o link continua a abrir. É de propósito: se já enviaste o link a alguém, essa pessoa não vai dar a uma página de erro.</div>
+  <div class="lista" id="lista"></div>
+</main>
+
+<button class="ajuda-btn" type="button" data-acao="tour-inicia" title="Tour guiado" aria-label="Abrir tour guiado">?</button>
+
+<!-- tour -->
+<div class="spot hide" id="spot"></div>
+<div class="tip hide" id="tip">
+  <button class="fechar" type="button" data-acao="tour-fecha" aria-label="Fechar tour">×</button>
+  <p class="g" id="tip-g">Guia · 1 / 5</p>
+  <h4 id="tip-title"></h4>
+  <p id="tip-text"></p>
+  <div class="btns">
+    <button class="pular" type="button" data-acao="tour-fecha">Saltar tour</button>
+    <button class="ant" type="button" id="tip-ant" data-acao="tour-passo" data-arg="-1">Anterior</button>
+    <button class="prox" type="button" id="tip-prox" data-acao="tour-passo" data-arg="1">Próximo</button>
+  </div>
+</div>
+
+<script type="module" src="painel.js"></script>
+</body>
+</html>
