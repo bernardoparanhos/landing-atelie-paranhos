@@ -39,8 +39,11 @@ const br = {
       escreve "R$ 980" e Portugal escreve "€980". */
   moeda: "R$ ",
 
-  /** WhatsApp desta versão: DDI + DDD + número, só dígitos. */
-  whatsapp: "5524992810807",
+  /** WhatsApp desta versão: DDI + DDD + número, só dígitos.
+      É o mesmo nas duas versões — WhatsApp Business, atende Brasil e
+      Portugal. Fica por versão mesmo assim: no dia em que houver um
+      número português, muda uma linha e só a /pt/ sente. */
+  whatsapp: "554588121303",
 
   // --- cabeça da página -------------------------------------
   meta: {
@@ -435,7 +438,6 @@ const pt: typeof br = {
   idioma: "Português de Portugal",
   moeda: "€",
 
-  // ATENÇÃO: número a confirmar antes de publicar. Ver README.
   whatsapp: "554588121303",
 
   meta: {
@@ -640,7 +642,7 @@ const pt: typeof br = {
       {
         n: "05",
         title: "Registas o teu domínio",
-        body: "Fechado, aí sim entra o endereço: registado por ti, em teu nome, com o teu NIF, entre €15 e €25 por ano.",
+        body: "Fechado, aí sim entra o endereço: registado por ti, em teu nome, com o teu NIF, entre €12 e €25 por ano.",
         aside: "10 minutos",
         note: {
           title: "Porque te peço o acesso",
@@ -727,7 +729,7 @@ const pt: typeof br = {
        ela já tem e usa para tudo, tal como o brasileiro usa o CPF. */
     dominio: {
       kicker: "O domínio é à parte",
-      destaque: "€15 a €25 por ano, pagos por ti, em teu nome.",
+      destaque: "€12 a €25 por ano, pagos por ti, em teu nome.",
       corpo:
         "Registas num registador português com o teu NIF, direto no dns.pt ou na Hostinger. O endereço é teu de verdade. É o único custo que se repete, e nunca passa por mim.",
       opcoes: [
