@@ -28,6 +28,9 @@ img{display:block;max-width:100%}
 .nav{position:sticky;top:0;z-index:5;background:rgba(233,230,225,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--linha);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 44px}
 .nav .marca{font-family:'Cormorant Garamond',serif;font-size:21px;letter-spacing:.28em;text-transform:uppercase}
 .nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--sec)}
+/* 24px e o minimo da WCAG 2.5.8 para alvo de toque; os links de nav e de
+   rodape ficavam com 16 a 20px de altura so pela caixa do texto. */
+.nav ul a,footer a{display:inline-flex;align-items:center;min-height:24px}
 .nav ul .on{color:var(--ouro);border-bottom:1px solid var(--ouro);padding-bottom:3px}
 
 main{max-width:1180px;margin:0 auto;padding:0 44px}
@@ -47,12 +50,17 @@ section.last{padding-bottom:96px}
 .esp .ico{position:absolute;top:30px;left:28px;z-index:2}
 .esp .traco{width:38px;height:1px;background:var(--ouro);margin-bottom:16px}
 .esp.foto .traco{background:rgba(255,255,255,.7)}
-.esp h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:23px;letter-spacing:.09em;text-transform:uppercase;margin:0 0 8px;line-height:1.15}
+.esp h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(17px,1.8vw,23px);letter-spacing:.09em;text-transform:uppercase;margin:0 0 8px;line-height:1.15;overflow-wrap:break-word}
 .esp .quando{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--cred);margin:0 0 18px}
 .esp.foto .quando{color:rgba(255,255,255,.8)}
 .esp .ver{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--sec)}
 .esp.foto .ver{color:#fff}
 
+/* O titulo do card e clamp, nao os 26px fixos do desenho original: dentro da
+   janela da landing o card tem 221px uteis, e 'ACOMPANHAMENTO' — 14 caracteres
+   que nao quebram — ocupava 226px e transbordava. O teto de 26px continua
+   valendo quando a pagina e aberta sozinha, em tela larga. O overflow-wrap e
+   a rede embaixo, para nenhum nome futuro vazar. */
 /* propostas */
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
 .prop{position:relative;min-height:270px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:34px 32px;color:#fff}
@@ -61,7 +69,7 @@ section.last{padding-bottom:96px}
 .prop > *{position:relative;z-index:2}
 .prop .num{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:40px;letter-spacing:.04em;opacity:.92}
 .prop .foot .traco{width:34px;height:1px;background:rgba(255,255,255,.7);margin-bottom:16px}
-.prop h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px;line-height:1.12}
+.prop h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(18px,1.95vw,26px);letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px;line-height:1.12;overflow-wrap:break-word}
 .prop .pacote{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.8);margin:0 0 14px}
 .prop .ver{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#fff}
 

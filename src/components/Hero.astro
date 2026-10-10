@@ -10,9 +10,11 @@ const { eyebrow, stats, promessa } = hero;
   </div>
 
   {/* Duas colunas: a promessa à esquerda, a objeção respondida à direita.
-      O minmax(330px) garante que elas empilhem antes de ficarem estreitas
-      demais para o título, em vez de espremerem a tipografia. */}
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:clamp(34px,5vw,64px);align-items:center">
+      O min(330px,100%) e a parte que importa: sem o min(), a coluna nunca
+      encolhe abaixo de 330px e a pagina passa a rolar na horizontal em
+      tela de 280px. Com ele, as duas empilham antes de ficarem estreitas
+      demais para o titulo, em vez de espremerem a tipografia. */}
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:clamp(34px,5vw,64px);align-items:center">
 
     <div>
       <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 20px;letter-spacing:.02em">{eyebrow}</p>

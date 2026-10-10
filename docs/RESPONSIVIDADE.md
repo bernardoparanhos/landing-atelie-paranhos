@@ -1,5 +1,22 @@
 # Responsividade
 
+## O teste automatico
+
+```bash
+npm run build && npm run preview      # noutro terminal
+npm i -D puppeteer-core
+node scripts/checar-responsividade.mjs
+```
+
+Abre as cinco paginas (home, 404 e as tres demos) em 17 larguras, de 280px a
+2560px, no Chrome que ja esta instalado, e reprova se alguma delas rolar na
+horizontal, tiver alvo de clique menor que 24px ou campo de texto com fonte
+menor que 16px. Quando reprova, diz qual elemento causou.
+
+Vale rodar antes de publicar. **Nada disso aparece no `npm run verificar`**:
+tipos, build e auditoria passam com a pagina vazando pela lateral. Foi assim
+que um `minmax(330px,1fr)` sem `min()` entrou e so foi pego aqui.
+
 A regra que vale para tudo aqui: **em nenhuma largura pode haver barra de
 rolagem horizontal, e nada pode ser cortado pelas laterais.** Testado de 280px
 (menor que qualquer telefone em uso) a 2560px.

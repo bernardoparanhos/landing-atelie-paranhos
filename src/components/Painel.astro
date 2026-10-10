@@ -31,10 +31,10 @@ const { nome, valor } = painel.exemplo;
           <p style="font-size:14px;color:var(--ink-soft);margin:0 0 20px;line-height:1.6">Edite e salve. O site atualiza na hora, sem depender de ninguém.</p>
 
           <label for="dm-nome" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Nome do pacote</label>
-          <input id="dm-nome" value={nome} style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:15px;padding:11px 13px;color:var(--ink);outline-color:var(--gold);margin-bottom:16px" />
+          <input id="dm-nome" value={nome} style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold);margin-bottom:16px" />
 
           <label for="dm-valor" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Valor (R$)</label>
-          <input id="dm-valor" value={valor} inputmode="numeric" style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:15px;padding:11px 13px;color:var(--ink);outline-color:var(--gold)" />
+          <input id="dm-valor" value={valor} inputmode="numeric" style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold)" />
 
           <p style="font-size:13px;color:var(--muted);margin:8px 0 18px">Aperte Enter ou clique em salvar.</p>
 
@@ -118,11 +118,10 @@ const { nome, valor } = painel.exemplo;
   .pulsa { animation: pulsa 1s ease infinite; }
   .dica-seta { animation: pulsa 2.4s ease infinite; }
 
-  /* O iOS dá zoom automático em input com fonte menor que 16px, e o zoom
-     desalinha a página toda justo no momento em que a pessoa está testando. */
-  @media (max-width: 600px) {
-    #dm-nome, #dm-valor { font-size: 16px !important; }
-  }
+  /* Os dois campos sao 16px no estilo de cada um, nao aqui: abaixo disso o
+     iOS da zoom sozinho ao focar e desalinha a pagina inteira justo no
+     momento em que a pessoa esta testando. Isto valia um media query de
+     600px ate se notar que o iPad em retrato tem 768px e tambem faz. */
 </style>
 
 <script>

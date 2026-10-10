@@ -23,6 +23,8 @@ button{font-family:'Jost',sans-serif;cursor:pointer}
 .tab{background:none;border:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cred);padding:4px 0}
 .tab.on{color:var(--tinta);border-bottom:1px solid var(--ouro)}
 .topo .dir{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--sec)}
+/* 24px e o minimo da WCAG 2.5.8; estes dois links ficavam com 15px. */
+.topo .dir a{display:inline-flex;align-items:center;min-height:24px}
 .topo .dir .mail{color:var(--ouro);text-transform:none;letter-spacing:.04em;font-size:11px}
 main{max-width:960px;margin:0 auto;padding:34px 24px 120px}
 h2{margin:0 0 8px;font-weight:300}
@@ -30,7 +32,8 @@ h2 b{font-family:'Jost',sans-serif;font-weight:400;font-size:11px;letter-spacing
 h2 span{font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:.14em;text-transform:uppercase}
 .ajuda{font-size:13px;color:var(--cred);margin:0 0 24px;line-height:1.6}
 label{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--cred);margin:0 0 6px}
-input[type=text],textarea{width:100%;border:1px solid var(--linha);background:#fdfcfa;font-family:'Jost',sans-serif;font-size:14px;letter-spacing:.04em;padding:11px 13px;color:var(--tinta);outline-color:var(--ouro)}
+/* 16px, nao 14: abaixo disso o iOS da zoom sozinho ao focar o campo. */
+input[type=text],textarea{width:100%;border:1px solid var(--linha);background:#fdfcfa;font-family:'Jost',sans-serif;font-size:16px;letter-spacing:.04em;padding:11px 13px;color:var(--tinta);outline-color:var(--ouro)}
 textarea{min-height:120px;line-height:1.7;resize:vertical}
 .btn{display:inline-block;background:var(--tinta);color:#fff;border:0;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:12px 22px;margin-top:16px}
 .btn.mini{margin:0;padding:8px 14px}
