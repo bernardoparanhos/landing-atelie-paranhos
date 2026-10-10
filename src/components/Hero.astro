@@ -4,9 +4,32 @@ import { brand, tagline, wa, defaultWaMessage, hero } from "@/config/site";
 const { eyebrow, stats, promessa } = hero;
 ---
 <header style="padding:clamp(22px,3vw,34px) clamp(22px,6vw,100px) clamp(56px,8vw,104px);max-width:1180px;margin:0 auto">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:clamp(52px,8vw,96px);flex-wrap:wrap">
-    <span style="font-size:15px;font-weight:500;letter-spacing:-.01em">{brand}</span>
-    <span style="font-size:13px;color:var(--muted)">{tagline}</span>
+  {/* A marca so existia no favicon, onde quase ninguem olha. Trazida para o
+      topo, ela faz o cabecalho deixar de ser duas linhas de texto solto: o
+      simbolo em ouro e a assinatura, a etiqueta a direita reaproveita a
+      pilula que a secao 03 ja usa, e o fio fecha a faixa. */}
+  <div class="topo" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:clamp(44px,7vw,84px)">
+    <a href="/" style="display:flex;align-items:center;gap:11px" aria-label={brand}>
+      <svg class="marca" width="30" height="30" viewBox="-1 34 112 112" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <g stroke="var(--ink)" stroke-width="4.5">
+          <path d="M55 96 C50 82 44 70 34 62" />
+          <path d="M55 96 C60 84 66 74 76 68" />
+          <path d="M55 96 V70" />
+          <path d="M55 70 C48 62 44 52 45 42 C56 48 58 60 55 70 Z" />
+          <path d="M40 100 H70 L64 132 C63 137 60 140 55 140 C50 140 47 137 46 132 Z" />
+          <path d="M37 100 H73" />
+        </g>
+        <g stroke="var(--gold)" stroke-width="4.5" fill="var(--gold)" fill-opacity="0.12">
+          <path d="M34 62 C22 58 16 50 14 40 C27 41 35 50 40 62 Z" />
+          <path d="M76 68 C88 62 94 54 96 44 C83 45 74 54 70 66 Z" />
+        </g>
+      </svg>
+      <span style="font-size:16.5px;font-weight:500;letter-spacing:-.015em">{brand}</span>
+    </a>
+
+    <span style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-soft);background:#fff;border:1px solid var(--line);border-radius:40px;padding:6px 14px">
+      <i aria-hidden="true" style="width:5px;height:5px;border-radius:50%;background:var(--gold);flex:none"></i>{tagline}
+    </span>
   </div>
 
   {/* Duas colunas: a promessa à esquerda, a objeção respondida à direita.
@@ -74,3 +97,13 @@ const { eyebrow, stats, promessa } = hero;
     ))}
   </div>
 </header>
+
+<style>
+  /* O simbolo acompanha o nome no hover: a folha dourada preenche um fio
+     mais e o conjunto sobe 1px. Desligado por prefers-reduced-motion na
+     regra global do layout. */
+  .topo a { transition: transform .25s; }
+  .topo a:hover { color: inherit; transform: translateY(-1px); }
+  .topo .marca g { transition: fill-opacity .25s; }
+  .topo a:hover .marca g:last-child { fill-opacity: .26; }
+</style>
