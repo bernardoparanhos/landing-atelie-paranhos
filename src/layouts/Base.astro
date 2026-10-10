@@ -154,7 +154,7 @@ const csp = [
   /* A seta desce um fio no hover: diz, sem texto, que o clique leva para
      baixo na propria pagina em vez de abrir outra coisa. O bloco de
      prefers-reduced-motion mais abaixo zera estas transicoes. */
-  .btn-gold .seta { display: inline-block; transition: transform .25s; }
+  .btn-gold .seta { display: block; flex: none; transition: transform .25s; }
   .btn-gold:hover .seta { transform: translateY(3px); }
 
   /* ===================== TRAVAS DE LARGURA =====================
