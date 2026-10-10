@@ -23,6 +23,13 @@ const { eyebrow, stats, promessa } = hero;
 
       <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:32px">
         <a class="btn-dark" href={wa(defaultWaMessage)} target="_blank" rel="noopener" style="display:inline-block;font-size:15px;font-weight:500;padding:15px 28px;border-radius:2px;min-height:44px">Falar no WhatsApp</a>
+
+        {/* Ancora pura, sem JavaScript: o scroll-behavior:smooth do html em
+            Base.astro ja da a rolagem suave, e o bloco de
+            prefers-reduced-motion a desliga para quem pediu. Quem chega
+            frio quer entender antes de chamar no WhatsApp; este e o
+            caminho de menor compromisso, e leva direto para a secao 04. */}
+        <a class="btn-ghost" href="#como-funciona" style="display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:500;padding:15px 26px;border-radius:2px;min-height:44px">Como funciona <span class="seta" aria-hidden="true">↓</span></a>
       </div>
     </div>
 
