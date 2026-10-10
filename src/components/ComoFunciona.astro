@@ -1,15 +1,23 @@
 ---
-import { steps } from "@/config/site";
+import { translations, type Lang } from "@/config/i18n";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang];
+const cf = t.comoFunciona;
+const steps = cf.passos;
 ---
 <section id="como-funciona" style="scroll-margin-top:clamp(16px,3vw,34px);background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
-    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">04</span>Como funciona</p>
-    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:18ch">Do primeiro oi à página no ar.</h2>
-    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:56ch;margin:0 0 28px;text-wrap:pretty">O seu único trabalho é separar o material. O resto é comigo.</p>
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">{cf.numero}</span>{cf.kicker}</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:18ch">{cf.titulo}</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:56ch;margin:0 0 28px;text-wrap:pretty">{cf.sub}</p>
 
     <div style="background:var(--ink);color:#fff;border-radius:3px;padding:clamp(24px,3.4vw,36px);margin:0 0 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:clamp(18px,3vw,40px);align-items:center">
-      <p style="font-size:clamp(21px,2.6vw,29px);font-weight:300;letter-spacing:-.025em;line-height:1.2;margin:0;text-wrap:balance">Você só fecha depois de ver a <em style="font-style:italic;color:#e0c49b">sua página</em> pronta.</p>
-      <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.78);margin:0;text-wrap:pretty">A primeira versão sai antes de qualquer pagamento. Você abre o link, vê as suas fotos e as suas propostas na página, e só então decide. Se não gostar, a gente para por aqui sem custo.</p>
+      <p style="font-size:clamp(21px,2.6vw,29px);font-weight:300;letter-spacing:-.025em;line-height:1.2;margin:0;text-wrap:balance">{cf.cardTituloInicio}<em style="font-style:italic;color:#e0c49b">{cf.cardTituloEnfase}</em>{cf.cardTituloFim}</p>
+      <p style="font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.78);margin:0;text-wrap:pretty">{cf.cardCorpo}</p>
     </div>
 
     {/* O funil fecha aqui. Quem chegou nesta secao veio do "Ver como
@@ -20,8 +28,8 @@ import { steps } from "@/config/site";
         scroll-behavior:smooth do html em Base.astro faz a rolagem e o
         bloco de prefers-reduced-motion a desliga. */}
     <div style="margin:0 0 40px">
-      <a class="btn-gold sobe" href="#exemplos" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:500;padding:15px 26px;border-radius:2px;min-height:44px">Ver os sites no ar <svg class="seta" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.5v-15" /><path d="M5.5 11 12 4.5 18.5 11" /></svg></a>
-      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0;max-width:46ch;text-wrap:pretty">Dois sites de clientes rodando de verdade, com as propostas que as clientes recebem.</p>
+      <a class="btn-gold sobe" href="#exemplos" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:500;padding:15px 26px;border-radius:2px;min-height:44px">{cf.ctaExemplos} <svg class="seta" aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19.5v-15" /><path d="M5.5 11 12 4.5 18.5 11" /></svg></a>
+      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0;max-width:46ch;text-wrap:pretty">{cf.ctaExemplosNota}</p>
     </div>
 
     <div style="display:flex;flex-direction:column">

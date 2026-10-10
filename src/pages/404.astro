@@ -1,19 +1,31 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { brand, wa, defaultWaMessage } from "@/config/site";
+import { brand, wa } from "@/config/site";
+import { translations, idiomas } from "@/config/i18n";
+
+/* Usa o mesmo Base das outras: um só lugar define fonte, cor, favicon e
+   CSP. noindex porque é a única página que não deve ir para o Google.
+
+   Vai em português do Brasil porque a hospedagem serve um 404 só para o
+   site inteiro — não há como ter um por versão num site estático. O que
+   dá para fazer, e está feito, é oferecer a porta das duas versões no
+   fim: quem errou o endereço dentro de /pt/ volta para /pt/, não para a
+   página brasileira. */
+const t = translations.br;
+const e = t.erro404;
 ---
-{/* Usa o mesmo Base da home: um só lugar define fonte, cor, favicon e CSP.
-    noindex porque é a única página que não deve ir para o Google. */}
-<Base title={`Página não encontrada · ${brand}`} description="Esta página não existe ou mudou de endereço." noindex>
+<Base lang="br" title={`${e.tituloAba} · ${brand}`} description={e.descricao} noindex>
 
   <main style="min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(32px,8vw,80px) clamp(22px,6vw,100px)">
     <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0">{brand}</p>
     <p style="font-weight:200;font-size:clamp(76px,18vw,160px);line-height:1;letter-spacing:-.04em;margin:14px 0 0;color:var(--gold)">404</p>
-    <h1 style="font-weight:300;font-size:clamp(28px,5vw,44px);line-height:1.12;letter-spacing:-.03em;margin:10px 0 0;max-width:20ch;text-wrap:balance">Esta página não existe (ou mudou de endereço).</h1>
-    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:46ch;margin:18px 0 0;text-wrap:pretty">Pode ser um link antigo ou um erro de digitação. A página principal continua no lugar de sempre.</p>
+    <h1 style="font-weight:300;font-size:clamp(28px,5vw,44px);line-height:1.12;letter-spacing:-.03em;margin:10px 0 0;max-width:20ch;text-wrap:balance">{e.titulo}</h1>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:46ch;margin:18px 0 0;text-wrap:pretty">{e.corpo}</p>
     <div style="display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;margin-top:36px">
-      <a href="/" style="display:inline-flex;align-items:center;font-size:15px;font-weight:500;border-bottom:1px solid var(--gold);padding-bottom:6px;min-height:44px">Voltar para o início</a>
-      <a href={wa(defaultWaMessage)} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;font-size:15px;font-weight:500;border-bottom:1px solid var(--gold);padding-bottom:6px;min-height:44px">Falar no WhatsApp</a>
+      {idiomas.map((l) => (
+        <a href={translations[l].rota} lang={translations[l].htmlLang} style="display:inline-flex;align-items:center;font-size:15px;font-weight:500;border-bottom:1px solid var(--gold);padding-bottom:6px;min-height:44px">{translations[l].erro404.voltar} · {translations[l].sigla}</a>
+      ))}
+      <a href={wa("br", t.waPadrao)} target="_blank" rel="noopener" style="display:inline-flex;align-items:center;font-size:15px;font-weight:500;border-bottom:1px solid var(--gold);padding-bottom:6px;min-height:44px">{e.whatsapp}</a>
     </div>
   </main>
 </Base>

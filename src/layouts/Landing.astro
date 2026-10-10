@@ -1,0 +1,39 @@
+---
+// A landing inteira, numa versão de idioma. É só a ordem das seções:
+// cada uma recebe `lang` e vai buscar o próprio texto no dicionário de
+// src/config/i18n.ts.
+//
+// As duas páginas em src/pages/ não fazem mais do que escolher o idioma:
+//   index.astro     → <Landing lang="br" />
+//   pt/index.astro  → <Landing lang="pt" />
+//
+// Um terceiro idioma é uma pasta a mais em pages/ e uma entrada a mais no
+// dicionário. Nenhuma seção muda.
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import Exemplos from "@/components/Exemplos.astro";
+import Painel from "@/components/Painel.astro";
+import Template from "@/components/Template.astro";
+import ComoFunciona from "@/components/ComoFunciona.astro";
+import Formatos from "@/components/Formatos.astro";
+import Incluso from "@/components/Incluso.astro";
+import CTA from "@/components/CTA.astro";
+import Footer from "@/components/Footer.astro";
+import type { Lang } from "@/config/i18n";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+<Base lang={lang}>
+  <Hero lang={lang} />
+  <Exemplos lang={lang} />
+  <Painel lang={lang} />
+  <Template lang={lang} />
+  <ComoFunciona lang={lang} />
+  <Formatos lang={lang} />
+  <Incluso lang={lang} />
+  <CTA lang={lang} />
+  <Footer />
+</Base>

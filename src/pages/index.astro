@@ -1,25 +1,6 @@
 ---
-// A página é só a ordem das seções. Todo texto, preço e link mora em
-// src/config/site.ts; cada seção lê de lá. Ver README.md.
-import Base from "@/layouts/Base.astro";
-import Hero from "@/components/Hero.astro";
-import Exemplos from "@/components/Exemplos.astro";
-import Painel from "@/components/Painel.astro";
-import Template from "@/components/Template.astro";
-import ComoFunciona from "@/components/ComoFunciona.astro";
-import Formatos from "@/components/Formatos.astro";
-import Incluso from "@/components/Incluso.astro";
-import CTA from "@/components/CTA.astro";
-import Footer from "@/components/Footer.astro";
+// A página brasileira, na raiz. Todo o conteúdo mora no dicionário
+// `br` de src/config/i18n.ts; a ordem das seções, em Landing.astro.
+import Landing from "@/layouts/Landing.astro";
 ---
-<Base>
-  <Hero />
-  <Exemplos />
-  <Painel />
-  <Template />
-  <ComoFunciona />
-  <Formatos />
-  <Incluso />
-  <CTA />
-  <Footer />
-</Base>
+<Landing lang="br" />

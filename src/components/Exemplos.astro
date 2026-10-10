@@ -1,17 +1,28 @@
 ---
 import { Image } from "astro:assets";
 import { clients } from "@/config/site";
+import { translations, type Lang } from "@/config/i18n";
 
-const quotes = clients.filter((c) => c.quote);
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang];
+const e = t.exemplos;
+
+// Junta o que não muda de versão (imagens, endereços) com o que muda
+// (nicho, números, depoimento), casando pelo id.
+const cards = clients.map((c) => ({ ...c, ...e.clientes[c.id] }));
+const comDepoimento = cards.filter((c) => c.quote);
 ---
 <section id="exemplos" style="scroll-margin-top:clamp(16px,3vw,34px);background:var(--ink);color:#fff">
   <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
-    <p style="font-size:13px;font-weight:500;color:var(--gold-light);margin:0 0 16px"><span style="opacity:.6;margin-right:10px">01</span>Exemplos no ar</p>
-    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">Estes são os exemplos desta página.</h2>
-    <p style="font-size:16px;line-height:1.7;color:rgba(255,255,255,.7);max-width:56ch;margin:0 0 38px;text-wrap:pretty">Sites de clientes, rodando de verdade. O site e as propostas são os mesmos que as clientes deles recebem no WhatsApp.</p>
+    <p style="font-size:13px;font-weight:500;color:var(--gold-light);margin:0 0 16px"><span style="opacity:.6;margin-right:10px">{e.numero}</span>{e.kicker}</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">{e.titulo}</h2>
+    <p style="font-size:16px;line-height:1.7;color:rgba(255,255,255,.7);max-width:56ch;margin:0 0 38px;text-wrap:pretty">{e.sub}</p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(18px,2.6vw,28px)">
-      {clients.map((c) => (
+      {cards.map((c) => (
         <div style="background:var(--card-dark);border:1px solid rgba(255,255,255,.12);border-radius:3px;overflow:hidden;display:flex;flex-direction:column">
           {/* Sem aspect-ratio e sem object-fit: cada print aparece na
               proporcao que tem (~2.09, e 2.48 no caso de um deles), entao
@@ -28,8 +39,8 @@ const quotes = clients.filter((c) => c.quote);
               Nada e cortado, seja qual for o print que entrar aqui depois. */}
           <div style="display:grid;grid-template-columns:1fr">
             <a href={c.siteUrl} target="_blank" rel="noopener" style="display:block;position:relative">
-              <Image src={c.shotSite} alt={"Site de " + c.name} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto" />
-              <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">o site</span>
+              <Image src={c.shotSite} alt={`${e.altSite} ${c.name}`} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto" />
+              <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">{e.tarjaSite}</span>
             </a>
 
             {/* A emenda: um fio que acende no meio e some nas pontas, em cima
@@ -41,8 +52,8 @@ const quotes = clients.filter((c) => c.quote);
             </div>
 
             <a href={c.proposalsUrl} target="_blank" rel="noopener" style="display:block;position:relative">
-              <Image src={c.shotProposals} alt={"Propostas de " + c.name} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto" />
-              <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">as propostas</span>
+              <Image src={c.shotProposals} alt={`${e.altPropostas} ${c.name}`} widths={[480, 720, 960]} sizes="(max-width: 760px) calc(100vw - 44px), 476px" quality={92} style="width:100%;height:auto" />
+              <span style="position:absolute;left:0;bottom:0;background:rgba(46,37,33,.8);color:#fff;font-size:12px;padding:5px 10px">{e.tarjaPropostas}</span>
             </a>
           </div>
 
@@ -63,8 +74,8 @@ const quotes = clients.filter((c) => c.quote);
                 para o template, e a pessoa precisa saber, antes de clicar,
                 se vai abrir o site de alguém ou o modelo base. */}
             <div style="display:flex;flex-direction:column;gap:10px;margin-top:auto">
-              <a class="row-link" href={c.siteUrl} target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:13px 16px;font-size:14.5px;min-height:44px"><span>Ver o site {c.shortName}</span><span style="color:var(--gold-light)">↗</span></a>
-              <a class="row-link" href={c.proposalsUrl} target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:13px 16px;font-size:14.5px;min-height:44px"><span>Ver as propostas {c.shortName}</span><span style="color:var(--gold-light)">↗</span></a>
+              <a class="row-link" href={c.siteUrl} target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:13px 16px;font-size:14.5px;min-height:44px"><span>{e.verSite} {c.shortName}</span><span style="color:var(--gold-light)">↗</span></a>
+              <a class="row-link" href={c.proposalsUrl} target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:13px 16px;font-size:14.5px;min-height:44px"><span>{e.verPropostas} {c.shortName}</span><span style="color:var(--gold-light)">↗</span></a>
             </div>
           </div>
         </div>
@@ -72,14 +83,17 @@ const quotes = clients.filter((c) => c.quote);
     </div>
 
     <div style="margin-top:clamp(40px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(18px,2.6vw,28px)">
-      {quotes.map((c) => (
+      {comDepoimento.map((c) => (
         <figure style="margin:0;background:var(--card-dark);border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:clamp(24px,3vw,34px);display:flex;flex-direction:column;gap:18px">
           <p style="font-size:clamp(17px,1.8vw,21px);font-weight:300;line-height:1.55;letter-spacing:-.01em;margin:0;color:#fff;text-wrap:pretty">{"“" + c.quote + "”"}</p>
           <figcaption style="display:flex;align-items:center;gap:12px;margin-top:auto">
             <span style="width:38px;height:38px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex:none">{c.initial}</span>
             <span>
               <span style="display:block;font-size:14.5px;font-weight:500;color:#fff">{c.name}</span>
-              <span style="display:block;font-size:13px;color:rgba(255,255,255,.55)">{c.niche}</span>
+              {/* Na versao portuguesa o rotulo ganha o pais: quem le em
+                  Portugal precisa saber que a fala e de uma cliente do
+                  Brasil. Esconder isso seria passar a fala por local. */}
+              <span style="display:block;font-size:13px;color:rgba(255,255,255,.55)">{c.niche}{e.origemDepoimento ? ` · ${e.origemDepoimento}` : ""}</span>
             </span>
           </figcaption>
         </figure>

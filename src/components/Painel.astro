@@ -1,7 +1,13 @@
 ---
-import { painel } from "@/config/site";
+import { translations, type Lang } from "@/config/i18n";
 
-const { nome, valor } = painel.exemplo;
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = translations[lang];
+const p = t.painel;
+const moeda = t.moeda;
 ---
 {/*
   Seção 02, logo depois dos depoimentos, e por um motivo: a cliente acabou
@@ -12,53 +18,67 @@ const { nome, valor } = painel.exemplo;
 */}
 <section id="painel" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div style="max-width:1180px;margin:0 auto;padding:clamp(60px,8vw,106px) clamp(22px,6vw,100px)">
-    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">02</span>O painel, agora</p>
-    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">Parece simples? Mexe aí e confere.</h2>
-    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:58ch;margin:0 0 10px;text-wrap:pretty">Todo mundo pensa a mesma coisa: "parece fácil, mas na hora eu vou travar". Então em vez de explicar, é melhor você mexer. Este é o painel, de verdade. Mude o nome do pacote ou o valor e salve.</p>
-    <p class="dica-seta" style="font-size:13.5px;font-weight:500;color:var(--gold);margin:0 0 36px">↓ muda o valor aqui embaixo e vê o site mudar ao lado</p>
+    <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 16px"><span style="opacity:.55;margin-right:10px">{p.numero}</span>{p.kicker}</p>
+    <h2 style="font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:-.03em;margin:0 0 14px;max-width:20ch">{p.titulo}</h2>
+    <p style="font-size:16px;line-height:1.7;color:var(--ink-soft);max-width:58ch;margin:0 0 10px;text-wrap:pretty">{p.sub}</p>
+    <p class="dica-seta" style="font-size:13.5px;font-weight:500;color:var(--gold);margin:0 0 36px">{p.dica}</p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:clamp(20px,3vw,40px);align-items:start">
 
       <!-- lado esquerdo: o painel -->
       <div style="background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:clamp(20px,2.6vw,30px)">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px">
-          <span style="font-size:14.5px;font-weight:500;letter-spacing:-.01em">Seu estúdio · <span style="color:var(--gold)">admin</span></span>
-          <span style="font-size:12.5px;color:var(--muted)">painel privado</span>
+          <span style="font-size:14.5px;font-weight:500;letter-spacing:-.01em">{p.estudio} · <span style="color:var(--gold)">{p.admin}</span></span>
+          <span style="font-size:12.5px;color:var(--muted)">{p.privado}</span>
         </div>
 
         <div style="background:#fff;border:1px solid var(--line);border-radius:3px;padding:clamp(18px,2.2vw,24px)">
-          <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 4px">Pacotes</p>
-          <p style="font-size:14px;color:var(--ink-soft);margin:0 0 20px;line-height:1.6">Edite e salve. O site atualiza na hora, sem depender de ninguém.</p>
+          <p style="font-size:13px;font-weight:500;color:var(--gold);margin:0 0 4px">{p.pacotes}</p>
+          <p style="font-size:14px;color:var(--ink-soft);margin:0 0 20px;line-height:1.6">{p.pacotesSub}</p>
 
-          <label for="dm-nome" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Nome do pacote</label>
-          <input id="dm-nome" value={nome} style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold);margin-bottom:16px" />
+          <label for="dm-nome" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">{p.labelNome}</label>
+          <input id="dm-nome" value={p.exemploNome} style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold);margin-bottom:16px" />
 
-          <label for="dm-valor" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">Valor (R$)</label>
-          <input id="dm-valor" value={valor} inputmode="numeric" style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold)" />
+          <label for="dm-valor" style="display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px">{p.labelValor}</label>
+          <input id="dm-valor" value={p.exemploValor} inputmode="numeric" style="width:100%;border:1px solid var(--line);border-radius:2px;background:var(--bg);font-family:inherit;font-size:16px;padding:11px 13px;color:var(--ink);outline-color:var(--gold)" />
 
-          <p style="font-size:13px;color:var(--muted);margin:8px 0 18px">Aperte Enter ou clique em salvar.</p>
+          <p style="font-size:13px;color:var(--muted);margin:8px 0 18px">{p.enter}</p>
 
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-            <button id="dm-salvar" class="btn-dark" type="button" style="border:0;border-radius:2px;font-family:inherit;font-size:14.5px;font-weight:500;padding:13px 24px;cursor:pointer;min-height:44px">Salvar alterações</button>
-            <span id="dm-publicado" style="font-size:13.5px;font-weight:500;color:var(--gold);display:none">publicado no seu site</span>
+            {/* As cinco frases que o script escreve na tela vêm em data-*,
+                não cravadas no JavaScript: assim a versão portuguesa troca
+                o texto sem um segundo arquivo de script e sem script
+                inline, que a CSP script-src 'self' proíbe. */}
+            <button
+              id="dm-salvar"
+              class="btn-dark"
+              type="button"
+              data-salvar={p.salvar}
+              data-salvando={p.salvando}
+              data-vazio={p.pacoteVazio}
+              data-moeda={moeda}
+              data-aviso={p.avisoPublicado}
+              style="border:0;border-radius:2px;font-family:inherit;font-size:14.5px;font-weight:500;padding:13px 24px;cursor:pointer;min-height:44px"
+            >{p.salvar}</button>
+            <span id="dm-publicado" style="font-size:13.5px;font-weight:500;color:var(--gold);display:none">{p.publicadoBotao}</span>
           </div>
         </div>
 
-        <p style="font-size:14px;color:var(--ink-soft);margin:18px 0 0;line-height:1.65">No painel de verdade você também troca fotos, textos e os ensaios da página inicial. Tudo assim, do mesmo jeito.</p>
+        <p style="font-size:14px;color:var(--ink-soft);margin:18px 0 0;line-height:1.65">{p.rodapePainel}</p>
       </div>
 
       <!-- lado direito: o que a cliente dela vê -->
       <div>
         <div style="background:var(--bg);display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-bottom:0;border-radius:3px 3px 0 0">
           <span style="display:flex;gap:5px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:var(--line);display:block"></i></span>
-          <span style="flex:1;background:#fff;border:1px solid var(--line);border-radius:2px;font-size:12px;color:var(--ink-soft);padding:5px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">seuestudio.com.br/gestante</span>
+          <span style="flex:1;background:#fff;border:1px solid var(--line);border-radius:2px;font-size:12px;color:var(--ink-soft);padding:5px 12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{p.urlPreview}</span>
         </div>
 
         <div style="background:var(--ink);color:#fff;padding:clamp(24px,3.4vw,38px) clamp(20px,2.8vw,32px);border:1px solid var(--ink);border-top:0;border-radius:0 0 3px 3px;position:relative;overflow:hidden">
-          <span id="site-salvando" class="pulsa" style="position:absolute;top:14px;right:16px;font-size:12px;color:var(--gold-light);display:none">salvando…</span>
+          <span id="site-salvando" class="pulsa" style="position:absolute;top:14px;right:16px;font-size:12px;color:var(--gold-light);display:none">{p.salvando}</span>
 
-          <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 10px">ensaio gestante</p>
-          <h3 style="font-weight:300;font-size:clamp(23px,2.6vw,31px);letter-spacing:-.025em;margin:0 0 22px;line-height:1.18">A doce espera, do seu jeito.</h3>
+          <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 10px">{p.ensaioKicker}</p>
+          <h3 style="font-weight:300;font-size:clamp(23px,2.6vw,31px);letter-spacing:-.025em;margin:0 0 22px;line-height:1.18">{p.ensaioTitulo}</h3>
 
           <div style="display:flex;gap:8px;margin-bottom:24px">
             <img src="/assets/ph-p-04.svg" alt="" style="flex:1;min-width:0;height:92px;object-fit:cover;opacity:.92;border-radius:2px" />
@@ -67,15 +87,15 @@ const { nome, valor } = painel.exemplo;
 
           <div id="site-card" style="border:1px solid rgba(255,255,255,.22);border-radius:2px;background:transparent;padding:20px 22px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;transition:border-color .5s, background .5s, transform .5s">
             <div>
-              <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 6px">pacote</p>
-              <p id="site-nome" style="font-size:clamp(17px,4.2vw,21px);font-weight:500;letter-spacing:-.02em;overflow-wrap:anywhere;margin:0">{nome}</p>
+              <p style="font-size:12.5px;color:var(--gold-light);margin:0 0 6px">{p.rotuloPacote}</p>
+              <p id="site-nome" style="font-size:clamp(17px,4.2vw,21px);font-weight:500;letter-spacing:-.02em;overflow-wrap:anywhere;margin:0">{p.exemploNome}</p>
             </div>
-            <p id="site-valor" style="font-size:clamp(23px,5.4vw,30px);font-weight:300;letter-spacing:-.03em;margin:0;color:#fff;transition:color .5s">R$ {valor}</p>
+            <p id="site-valor" style="font-size:clamp(23px,5.4vw,30px);font-weight:300;letter-spacing:-.03em;margin:0;color:#fff;transition:color .5s">{moeda} {p.exemploValor}</p>
           </div>
 
-          <p id="site-publicado" style="font-size:13px;color:var(--gold-light);margin:14px 0 0;text-align:center;display:none">pronto, já está no ar para as suas clientes</p>
+          <p id="site-publicado" style="font-size:13px;color:var(--gold-light);margin:14px 0 0;text-align:center;display:none">{p.publicadoSite}</p>
 
-          <div style="text-align:center;margin-top:22px"><span style="display:inline-block;border-bottom:1px solid var(--gold);font-size:13.5px;padding-bottom:5px">Reservar pelo WhatsApp</span></div>
+          <div style="text-align:center;margin-top:22px"><span style="display:inline-block;border-bottom:1px solid var(--gold);font-size:13.5px;padding-bottom:5px">{p.reservar}</span></div>
         </div>
 
         {/* Região viva: quem usa leitor de tela recebe o aviso de publicado
@@ -86,23 +106,23 @@ const { nome, valor } = painel.exemplo;
 
     <!-- o painel inteiro, embutido: para quem quiser abrir as gavetas -->
     <div style="margin-top:clamp(40px,5vw,64px)">
-      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);margin:0 0 18px;max-width:58ch;text-wrap:pretty">Aquele ali é um pedaço. Este é o painel inteiro, do jeito que você recebe: propostas, fotos, textos e datas especiais, cada um na sua aba.</p>
+      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);margin:0 0 18px;max-width:58ch;text-wrap:pretty">{p.embedIntro}</p>
       <div style="background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;box-shadow:0 18px 44px rgba(46,37,33,.08)">
         <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0e3da">
           <span style="display:flex;gap:6px" aria-hidden="true"><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i><i style="width:8px;height:8px;border-radius:50%;background:#e9dcd2;display:block"></i></span>
-          <span style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">estudionome.com.br/admin</span>
+          <span style="flex:1;font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{p.embedUrlBarra}</span>
         </div>
         <iframe
           class="janela-frame"
-          src={painel.embedUrl}
-          title="Painel de administração, versão de demonstração"
+          src={p.embedUrl}
+          title={p.embedTitulo}
           loading="lazy"
           sandbox="allow-scripts allow-same-origin"
           referrerpolicy="no-referrer"
           style="display:block;width:100%;height:clamp(440px,70vh,680px);border:0;background:var(--bg)"
         ></iframe>
       </div>
-      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">Role dentro da janela. Nada do que você mexer aqui sai daqui.</p>
+      <p style="font-size:13.5px;color:var(--muted);margin:12px 0 0">{p.embedNota}</p>
     </div>
   </div>
 </section>
@@ -127,6 +147,10 @@ const { nome, valor } = painel.exemplo;
 <script>
   // Empacotado pelo Astro num arquivo próprio (nada de script inline), para
   // a página rodar sob Content-Security-Policy com script-src 'self'.
+  //
+  // É um script só para as duas versões da página: todo texto que ele
+  // escreve na tela vem dos data-* do botão, que o dicionário preencheu.
+  // Traduzir a seção não toca em uma linha daqui.
 
   /** Busca por id e falha alto se o elemento sumiu do HTML. */
   function pega<T extends HTMLElement>(id: string): T {
@@ -146,6 +170,15 @@ const { nome, valor } = painel.exemplo;
   const dmPub = pega("dm-publicado");
   const aviso = pega("dm-aviso");
 
+  /** Um texto do dicionário, que chegou no HTML como data-*. */
+  const texto = (chave: string, reserva: string) => btn.dataset[chave] ?? reserva;
+
+  const TXT_SALVAR = texto("salvar", "Salvar");
+  const TXT_SALVANDO = texto("salvando", "…");
+  const TXT_VAZIO = texto("vazio", "—");
+  const MOEDA = texto("moeda", "R$");
+  const TXT_AVISO = texto("aviso", "%n · %v");
+
   let tSalvar: ReturnType<typeof setTimeout> | undefined;
   let tRealce: ReturnType<typeof setTimeout> | undefined;
   let ocupado = false;
@@ -153,7 +186,7 @@ const { nome, valor } = painel.exemplo;
   function salvar() {
     if (ocupado) return;
     ocupado = true;
-    btn.textContent = "salvando…";
+    btn.textContent = TXT_SALVANDO;
     salvando.style.display = "inline";
     publicado.style.display = "none";
     dmPub.style.display = "none";
@@ -164,19 +197,19 @@ const { nome, valor } = painel.exemplo;
     // o olho registrar que algo aconteceu do outro lado.
     tSalvar = setTimeout(function () {
       ocupado = false;
-      btn.textContent = "Salvar alterações";
+      btn.textContent = TXT_SALVAR;
       salvando.style.display = "none";
 
       // textContent, nunca innerHTML: o que a pessoa digita entra como
       // texto, não como marcação.
-      const nome = nomeI.value.trim() || "Seu pacote";
+      const nome = nomeI.value.trim() || TXT_VAZIO;
       const valor = (valorI.value || "0").replace(/[^\d.,]/g, "") || "0";
       siteNome.textContent = nome;
-      siteValor.textContent = "R$ " + valor;
+      siteValor.textContent = MOEDA + " " + valor;
 
       publicado.style.display = "block";
       dmPub.style.display = "inline";
-      aviso.textContent = `Publicado: ${nome}, R$ ${valor}.`;
+      aviso.textContent = TXT_AVISO.replace("%n", nome).replace("%v", valor);
 
       card.style.borderColor = "#c9b48d";
       card.style.background = "rgba(138,111,74,.28)";

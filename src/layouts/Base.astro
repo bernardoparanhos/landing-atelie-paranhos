@@ -1,14 +1,32 @@
 ---
 import { getImage } from "astro:assets";
-import { brand, TITULO, DESCRICAO, base, canonical, clients } from "@/config/site";
+import { brand, base, canonicalDe, tituloDe, clients } from "@/config/site";
+import { translations, idiomas, type Lang } from "@/config/i18n";
 
 interface Props {
+  /** Qual versão da página está sendo montada. */
+  lang: Lang;
   title?: string;
   description?: string;
   /** Tira a página do índice do Google. Só o 404 usa. */
   noindex?: boolean;
 }
-const { title = TITULO, description = DESCRICAO, noindex = false } = Astro.props;
+const { lang, noindex = false } = Astro.props;
+const t = translations[lang];
+const title = Astro.props.title ?? tituloDe(lang);
+const description = Astro.props.description ?? t.meta.descricao;
+const canonical = canonicalDe(lang);
+
+// hreflang: diz ao Google que as duas páginas são a mesma coisa em
+// variantes de português, e qual serve para quem não casa com nenhuma.
+// Sem isto, uma versão canibaliza a outra como conteúdo duplicado —
+// e as duas são quase o mesmo texto, então o risco é real.
+const alternates = base
+  ? idiomas.map((l) => ({
+      hreflang: translations[l].htmlLang,
+      href: `${base}${translations[l].rota}`,
+    }))
+  : [];
 
 // Imagem da prévia de compartilhamento: o print do site de uma cliente.
 // É o que faz sentido ver em cima do link no WhatsApp — a prova, não um
@@ -49,7 +67,7 @@ const csp = [
 ---
 
 <!doctype html>
-<html lang="pt-BR">
+<html lang={t.htmlLang}>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -61,6 +79,10 @@ const csp = [
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large"} />
 {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
 {canonical && !noindex && <link rel="canonical" href={canonical} />}
+{!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+{/* x-default e a brasileira: e a versao de origem e a que responde por
+    quem nao casa com nenhum dos dois portugueses. */}
+{!noindex && alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={alternates[0].href} />}
 
 <!-- O SVG atende todo navegador moderno (e troca de cor em aba escura).
      Os PNG são para navegador antigo e para o iOS; cada tamanho tem a
@@ -71,7 +93,7 @@ const csp = [
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 <meta property="og:type" content="website" />
-<meta property="og:locale" content="pt_BR" />
+<meta property="og:locale" content={t.ogLocale} />
 <meta property="og:site_name" content={brand} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
@@ -79,7 +101,7 @@ const csp = [
 {base && <meta property="og:image" content={`${base}${og.src}`} />}
 {base && <meta property="og:image:width" content="1200" />}
 {base && <meta property="og:image:height" content="630" />}
-{base && <meta property="og:image:alt" content="Página de uma fotógrafa cliente, no ar" />}
+{base && <meta property="og:image:alt" content={t.meta.ogImageAlt} />}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
